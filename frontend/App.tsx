@@ -49,8 +49,8 @@
          <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
          <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-     </Stack.Navigator>
-     </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
    );
  }
  
