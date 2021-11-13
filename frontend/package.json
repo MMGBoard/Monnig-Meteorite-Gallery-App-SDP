@@ -18,6 +18,7 @@
     "@react-navigation/material-top-tabs": "^6.0.6",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@types/react-native-vector-icons": "^6.4.10",
     "brew": "0.0.8",
     "fb-watchman": "^2.0.1",
     "react": "^17.0.2",
