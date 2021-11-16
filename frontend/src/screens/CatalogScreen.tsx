@@ -1,28 +1,20 @@
 import React from 'react'
-import { Text, View } from 'react-native';
-import { Searchbar } from 'react-native-paper';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RNPickerSelect from 'react-native-picker-select';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 export default function CatalogScreen({navigation} : {navigation: any}) {
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const onChangeSearch = query => setSearchQuery(query);
 
-    return (
-      <View style={{ }}>
-          <Searchbar
-              placeholder="Find by meteorite"
-              onChangeText={onChangeSearch}
-              value={searchQuery}
-              icon={()=><MaterialCommunityIcon name="barcode-scan" size={30}/>}
-          />
-          <RNPickerSelect style={{width: "30%" }}
-              onValueChange={(value) => console.log(value)}
-              items={[
-                  { label: 'By Display', value: 'by display' },
-                  { label: 'ALL', value: 'all' }
-              ]}
-          />
-      </View>
+    const data = firestore()
+        .collection('meteorites')
+        // Filter results
+        .where('COUNTRY', '==', 'USA')
+        .get().then(querySnapshot => {
+            console.log("No of meteorites found in USA: " + querySnapshot.docs.length);
+        });
+    
+    return (   
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>CatalogScreen!</Text>
+    </View>
     );
 }
