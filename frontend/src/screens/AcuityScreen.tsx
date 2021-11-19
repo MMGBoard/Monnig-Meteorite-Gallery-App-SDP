@@ -10,7 +10,7 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
     <View style={styles.backButton}>
           <PaperButton 
             icon="chevron-left" mode="contained" color="#4D1979"
-            onPress={() => navigation.navigate('AcuityScreen')}
+            onPress={() => navigation.navigate('LanguageScreen')}
           ><Text>Back</Text></PaperButton>
        </View>
       <TextPaper style={styles.label}>Please select your prefered font-size:</TextPaper>
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 30,
     marginLeft: 10,
-    width: "40%"
+    alignSelf: 'flex-start'
   },
   nextButton: {
     flex: 1,
     marginTop: 250,
     marginBottom: 50,
-    width: "60%",
+    width: "45%",
     alignSelf: 'center',
     bottom:0
   },
