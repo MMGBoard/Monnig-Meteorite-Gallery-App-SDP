@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "343456883644",
+    "firebase_url": "https://mmgdatabase-d5933-default-rtdb.firebaseio.com",
+    "project_id": "mmgdatabase-d5933",
+    "storage_bucket": "mmgdatabase-d5933.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343456883644:android:d785bed0d3af0796e6c1b9",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343456883644-5smunfb96hcbfumqcrn9hi3tap8ck8uh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN-7zFCS3APFq1qkdbEDOtlpZZnEyzVyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343456883644-5smunfb96hcbfumqcrn9hi3tap8ck8uh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343456883644:android:9051f214b3b4efd1e6c1b9",
+        "android_client_info": {
+          "package_name": "com.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343456883644-5smunfb96hcbfumqcrn9hi3tap8ck8uh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN-7zFCS3APFq1qkdbEDOtlpZZnEyzVyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343456883644-5smunfb96hcbfumqcrn9hi3tap8ck8uh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 import { Text, View, StyleSheet, ImageBackground } from 'react-native';
-import { RadioButton, Button } from 'react-native-paper';
+import { RadioButton, Button } from 'react-native-paper'
 
 export default function LanguageSelectionScreen({navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };

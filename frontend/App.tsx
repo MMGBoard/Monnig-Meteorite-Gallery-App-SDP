@@ -29,10 +29,13 @@
 
  function TabNavigator() {
    return (
-     <TopTab.Navigator>
-       <TopTab.Screen name="AssitanceScreen" component={AssistanceScreen} />
-       <TopTab.Screen name="CatalogScreen" component={CatalogScreen} />
-       <TopTab.Screen name="SettingsScreen" component={SettingsScreen} />
+     <TopTab.Navigator 
+      screenOptions={{
+        tabBarIndicatorStyle: {backgroundColor: "#4D1979"}
+      }}>
+       <TopTab.Screen name="Tour Assitance" component={AssistanceScreen} />
+       <TopTab.Screen name="Meteorite Catalog" component={CatalogScreen} />
+       <TopTab.Screen name="Settings" component={SettingsScreen} />
      </TopTab.Navigator>
    );
  }
@@ -49,8 +52,8 @@
          <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
          <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-     </Stack.Navigator>
-     </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
    );
  }
  
