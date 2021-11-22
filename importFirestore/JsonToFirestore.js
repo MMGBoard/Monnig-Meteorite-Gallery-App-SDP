@@ -1,7 +1,7 @@
 const admin = require('./node_modules/firebase-admin');
 const serviceFile = require("./serviceAccount.json"); //name of file downloaded from firebase
-const data = require("./files/meteoriteCollection.json"); // name of file that contains data to be uploaded
-const collectionKey = "meteorites"; //name of the collection
+const data = require("./files/meteoriteCollectionWithDiscription.json"); // name of file that contains data to be uploaded
+const collectionKey = "meteorites_plus"; //name of the collection
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceFile),
