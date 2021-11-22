@@ -10,7 +10,7 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
     <View style={styles.backButton}>
           <PaperButton 
             icon="chevron-left" mode="contained" color="#4D1979"
-            onPress={() => navigation.navigate('LanguageScreen')}
+            onPress={() => navigation.navigate('LanguageSelectionScreen')}
           ><Text>Back</Text></PaperButton>
        </View>
       <TextPaper style={styles.label}>Please select your prefered font-size:</TextPaper>
