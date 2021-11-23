@@ -5,19 +5,19 @@ import RNPickerSelect from 'react-native-picker-select';
 import firestore from '@react-native-firebase/firestore';
 import { Avatar, Button, Card, Title, Paragraph, Searchbar } from 'react-native-paper';
 
-
 export default function CatalogScreen({navigation}: {navigation: any}) {
-  const data = firestore()
+  // Data Fetching
+  /* const data = firestore()
         .collection('meteorites')
         // Filter results
         .where('COUNTRY', '==', 'USA')
         .get().then(querySnapshot => {
             console.log("No of meteorites found in USA: " + querySnapshot.docs.length);
         });
+  */
   const [searchQuery, setSearchQuery] = React.useState('');
   const onChangeSearch = (query: React.SetStateAction<string>) =>
     setSearchQuery(query);
-
   const LeftContent = (props:any) => <Avatar.Icon {...props} icon="folder" />
   const MyComponent = () => (
     <Card>
@@ -33,7 +33,6 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
       </Card.Actions>
     </Card>
   );
-
   return (
     <View style={{}}>
       <Searchbar
