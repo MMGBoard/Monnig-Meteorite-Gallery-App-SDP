@@ -17,10 +17,6 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
   const [loading, setLoading] = useState(true); //Set loading to true on component mount
   const [meteorites, setMeteories] = useState([]); //Initial empty array of users
 
-  if (loading) {
-    return <ActivityIndicator />
-  }
-
   useEffect(() => {
     const subscriber = firestore()
       .collection('meteories_plus')
@@ -33,11 +29,17 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
             key: documentSnapshot.id,
           });
         });
+        setMeteories(meteorites);
+        setLoading(false);
       });
 
       //Unsubscribe from events when no longer in use
       return () => subscriber();
   }, []);
+  
+  if (loading) {
+    return <ActivityIndicator />
+  }
 
   const ListComponent = () => (
     <FlatList
