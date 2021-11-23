@@ -5,6 +5,12 @@ import RNPickerSelect from 'react-native-picker-select';
 import firestore from '@react-native-firebase/firestore';
 import { Avatar, Button, Card, Title, Paragraph, Searchbar } from 'react-native-paper';
 
+if (__DEV__) {
+  firestore().useEmulator('localhost', 8080);
+}
+
+const db = firestore();
+
 export default function CatalogScreen({navigation}: {navigation: any}) {
   // Data Fetching
   const data = firestore()
@@ -12,7 +18,7 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
         // Filter results
         .where('CATALOG', '==', 'M8')
         .get().then(querySnapshot => {
-            console.log("No of meteorites found in USA: " + querySnapshot.docs.length);
+            console.log("Query Result =  " + querySnapshot.docs);
         });
   
 
@@ -46,8 +52,7 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
       data={meteorites}
       renderItem={({ item }) => (
        <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center'}} >
-         <Text>Meteorite ID: {item.id}</Text>
-         <Text>Meteorite Name: {item.METEORITE_} </Text>
+         <Text>Meteorite ID: {item}</Text>
        </View>
       )}
     />
