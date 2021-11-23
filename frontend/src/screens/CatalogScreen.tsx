@@ -5,22 +5,14 @@ import RNPickerSelect from 'react-native-picker-select';
 import firestore from '@react-native-firebase/firestore';
 import { Avatar, Button, Card, Title, Paragraph, Searchbar } from 'react-native-paper';
 
-if (__DEV__) {
+/*if (__DEV__) {
   firestore().useEmulator('localhost', 8080);
 }
 
-const db = firestore();
+const db = firestore();*/
 
 export default function CatalogScreen({navigation}: {navigation: any}) {
   // Data Fetching
-  const data = firestore()
-        .collection('meteorites_plus')
-        // Filter results
-        .where('CATALOG', '==', 'M8')
-        .get().then(querySnapshot => {
-            console.log("Query Result =  " + querySnapshot.docs);
-        });
-  
 
   const [loading, setLoading] = useState(true); //Set loading to true on component mount
   const [meteorites, setMeteories] = useState([]); //Initial empty array of users
