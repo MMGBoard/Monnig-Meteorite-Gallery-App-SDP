@@ -1,5 +1,5 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {View, ActivityIndicator, FlatList, Text} from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNPickerSelect from 'react-native-picker-select';
 import firestore from '@react-native-firebase/firestore';
@@ -7,14 +7,52 @@ import { Avatar, Button, Card, Title, Paragraph, Searchbar } from 'react-native-
 
 export default function CatalogScreen({navigation}: {navigation: any}) {
   // Data Fetching
-  /* const data = firestore()
-        .collection('meteorites')
+  const data = firestore()
+        .collection('meteorites_plus')
         // Filter results
-        .where('COUNTRY', '==', 'USA')
+        .where('CATALOG', '==', 'M8')
         .get().then(querySnapshot => {
             console.log("No of meteorites found in USA: " + querySnapshot.docs.length);
         });
-  */
+  
+
+  const [loading, setLoading] = useState(true); //Set loading to true on component mount
+  const [meteorites, setMeteories] = useState([]); //Initial empty array of users
+
+  if (loading) {
+    return <ActivityIndicator />
+  }
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('meteories_plus')
+      .onSnapshot(querySnapshot => {
+        const meteorite = [];
+
+        querySnapshot.forEach(documentSnapshot => {
+          meteorite.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+      });
+
+      //Unsubscribe from events when no longer in use
+      return () => subscriber();
+  }, []);
+
+  const ListComponent = () => (
+    <FlatList
+      data={meteorites}
+      renderItem={({ item }) => (
+       <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center'}} >
+         <Text>Meteorite ID: {item.id}</Text>
+         <Text>Meteorite Name: {item.METEORITE_} </Text>
+       </View>
+      )}
+    />
+  );  
+
   const [searchQuery, setSearchQuery] = React.useState('');
   const onChangeSearch = (query: React.SetStateAction<string>) =>
     setSearchQuery(query);
@@ -33,6 +71,8 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
       </Card.Actions>
     </Card>
   );
+
+
   return (
     <View style={{}}>
       <Searchbar
@@ -48,7 +88,7 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
           {label: 'ALL', value: 'all'},
         ]}
       />
-      <View>{MyComponent()}</View>
+      <View>{ListComponent()}</View>
     </View>
   );
 }
