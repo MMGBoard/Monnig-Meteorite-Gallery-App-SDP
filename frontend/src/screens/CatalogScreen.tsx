@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text } from 'react-native';
+import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Image } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
 
 export default function CatalogScreen() {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
@@ -39,6 +38,8 @@ export default function CatalogScreen() {
         <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text>Meteorite ID: {item.CATALOG}</Text>
           <Text>Meteorite Name: {item.METEORITE_}</Text>
+          <Text>Meteorite IMG: {item.PICTURES}</Text>
+          <Image source= {item.PICTURES} />
         </View>
       )}
     />
