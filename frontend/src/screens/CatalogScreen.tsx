@@ -1,93 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import {View, ActivityIndicator, FlatList, Text} from 'react-native';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RNPickerSelect from 'react-native-picker-select';
+import { ActivityIndicator, FlatList, View, Text } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Avatar, Button, Card, Title, Paragraph, Searchbar } from 'react-native-paper';
+import { Image } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
 
-/*if (__DEV__) {
-  firestore().useEmulator('localhost', 8080);
-}
-
-const db = firestore();*/
-
-export default function CatalogScreen({navigation}: {navigation: any}) {
-  // Data Fetching
-
-  const [loading, setLoading] = useState(true); //Set loading to true on component mount
-  const [meteorites, setMeteories] = useState([]); //Initial empty array of users
+export default function CatalogScreen() {
+  const [loading, setLoading] = useState(true); // Set loading to true on component mount
+  const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection('meteories_plus')
+      .collection('meteorites')
       .onSnapshot(querySnapshot => {
-        const meteorite = [];
-
+        const meteors: React.SetStateAction<any[]> =  []
+  
         querySnapshot.forEach(documentSnapshot => {
-          meteorite.push({
+          meteors.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
         });
-        setMeteories(meteorites);
+  
+        setMeteorites(meteors);
         setLoading(false);
       });
-
-      //Unsubscribe from events when no longer in use
-      return () => subscriber();
-  }, []);
   
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
+  }, []);
+
   if (loading) {
-    return <ActivityIndicator />
+    return <ActivityIndicator />;
   }
 
-  const ListComponent = () => (
+  return (
     <FlatList
       data={meteorites}
       renderItem={({ item }) => (
-       <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center'}} >
-         <Text>Meteorite ID: {item}</Text>
-       </View>
+        <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text>Meteorite ID: {item.CATALOG}</Text>
+          <Text>Meteorite Name: {item.METEORITE_}</Text>
+        </View>
       )}
     />
-  );  
-
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const onChangeSearch = (query: React.SetStateAction<string>) =>
-    setSearchQuery(query);
-  const LeftContent = (props:any) => <Avatar.Icon {...props} icon="folder" />
-  const MyComponent = () => (
-    <Card>
-      <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} />
-      <Card.Content>
-        <Title>Card title</Title>
-        <Paragraph>Card content</Paragraph>
-      </Card.Content>
-      <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-      <Card.Actions>
-        <Button>Cancel</Button>
-        <Button>Ok</Button>
-      </Card.Actions>
-    </Card>
-  );
-
-
-  return (
-    <View style={{}}>
-      <Searchbar
-        placeholder="Find by meteorite"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-        icon={() => <MaterialCommunityIcon name="barcode-scan" size={30} />}
-      />
-      <RNPickerSelect
-        onValueChange={value => console.log(value)}
-        items={[
-          {label: 'By Display', value: 'by display'},
-          {label: 'ALL', value: 'all'},
-        ]}
-      />
-      <View>{ListComponent()}</View>
-    </View>
   );
 }
