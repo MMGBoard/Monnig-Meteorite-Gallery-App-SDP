@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Text, View, Button, StyleSheet, FlatList, Picker  } from 'react-native';
-import { RadioButton, Button as PaperButton, Text as TextPaper, Card } from 'react-native-paper';
+import { Text, View, Button, StyleSheet, FlatList, Image } from 'react-native';
+import { RadioButton, Button as PaperButton, Text as PaperText, Card } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
+
 
 const colors = [
   { id: 1, txt: 'Red', isChecked: false },
@@ -13,6 +14,7 @@ const colors = [
 
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
   const [items, setItems] = useState(colors);
+  const [value, setValue] = React.useState('first');
 
   const handleChange = (id: number) => {
     let temp = items.map((color) => {
@@ -25,7 +27,7 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
   };
 
   let selected = items.filter((product) => product.isChecked);
-
+  
   const renderFlatList = (renderData: readonly any[] | null | undefined) => {
     return (
       <FlatList
@@ -46,7 +48,7 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
                     handleChange(item.id);
                   }}
                 />
-                <Text style={styles.label}>{item.txt}</Text>
+                <PaperText style={styles.label}>{item.txt}</PaperText>
               </View>
         )}
       />
@@ -54,30 +56,31 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
     };
 
     return (
-      <View style={styles.container}>
+      <View>
         <View style={styles.backButton}>
           <PaperButton 
-            icon="chevron-left" mode="contained" color="#4D1979"
+            icon="chevron-left" mode="contained"
             onPress={() => navigation.navigate('AcuityScreen')}
-          ><Text>Back</Text></PaperButton>
+          >Back</PaperButton>
         </View>
-        <Text style={styles.header}>Select colors you are not able to see:</Text>
-        <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
-        <Text style={styles.header}>Select your color blindness type:</Text>
-          <RNPickerSelect 
-              placeholder={{ label: "Select your color blindness type", value: null }} 
-              onValueChange={(value) => console.log(value)}
-              items={[
-                  { label: 'Deuteranomaly', value: 'deuteranomaly' },
-                  { label: 'Protanomaly', value: 'protanomaly' },
-                  { label: 'Protanopia', value: 'protanopia' },
-              ]}
-          />
-        <View style={styles.nextButton}>  
-          <Button
-            title="Start tour!" color="#4D1979"
-            onPress={() => navigation.navigate('TabNavigator')}
-          />
+        <View style={styles.container}>
+          <PaperText style={styles.header}>Select colors you are not able to see:</PaperText>
+          <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
+          <PaperText style={styles.header}>Select your color blindness type:</PaperText>
+            <RNPickerSelect 
+                placeholder={{ label: "Select your color blindness type", value: null }} 
+                onValueChange={(value) => console.log(value)}
+                items={[
+                    { label: 'Deuteranomaly', value: 'deuteranomaly' },
+                    { label: 'Protanomaly', value: 'protanomaly' },
+                    { label: 'Protanopia', value: 'protanopia' },
+                ]}
+            />
+          <View style={styles.nextButton}>  
+            <PaperButton mode="contained"
+              onPress={() => navigation.navigate('TabNavigator')}
+            >Start tour!</PaperButton>
+        </View>
        </View>
       </View>
     );
@@ -85,15 +88,18 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    margin: 100,
   },
   backButton: {
-    flex: 1,
     marginTop: 30,
-    marginLeft: 10,
+    marginLeft: 30,
     alignSelf: 'flex-start'
+  },
+  themeCard: {
+    marginLeft: 300,
+    marginRight: 50,
+    maxHeight: 500,
+    maxWidth: 300,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -120,8 +126,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ROBOTO'
   },
   nextButton: {
-    flex: 1,
-    marginTop: 250,
+    marginTop: 500,
     marginBottom: 50,
     width: "45%",
     alignSelf: 'center',
