@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Text, View, Button, StyleSheet, FlatList, Image } from 'react-native';
-import { RadioButton, Button as PaperButton, Text as PaperText, Card } from 'react-native-paper';
+import { Text, View, StyleSheet, FlatList } from 'react-native';
+import { Button as PaperButton, Text as PaperText, Switch, useTheme } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
-
+import { SettingContext } from '../components/SettingContextProvider';
 
 const colors = [
   { id: 1, txt: 'Red', isChecked: false },
@@ -14,8 +14,9 @@ const colors = [
 
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
   const [items, setItems] = useState(colors);
-  const [value, setValue] = React.useState('first');
-
+  const paperTheme = useTheme();
+  const {toggleTheme} = React.useContext(SettingContext);  
+  
   const handleChange = (id: number) => {
     let temp = items.map((color) => {
       if (id === color.id) {
@@ -25,8 +26,6 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
     });
     setItems(temp);
   };
-
-  let selected = items.filter((product) => product.isChecked);
   
   const renderFlatList = (renderData: readonly any[] | null | undefined) => {
     return (
@@ -63,6 +62,9 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
             onPress={() => navigation.navigate('AcuityScreen')}
           >Back</PaperButton>
         </View>
+        <PaperText style={{ marginTop: 50, justifyContent: 'center', alignItems: 'center' }}>Dark Mode</PaperText><View><Switch value={paperTheme.dark}
+        onValueChange={toggleTheme}
+        /></View>
         <View style={styles.container}>
           <PaperText style={styles.header}>Select colors you are not able to see:</PaperText>
           <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
