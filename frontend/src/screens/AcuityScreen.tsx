@@ -4,7 +4,8 @@ import { RadioButton, Button as PaperButton, Text as TextPaper } from 'react-nat
 
 export default function AcuityScreen({navigation} : {navigation: any}) {
   const [flexDirection, setflexDirection] = useState("column");
-  const [value, setValue] = React.useState('first');
+  const [value, setValue] = React.useState('secondChoice');
+ 
   return (
     <View style={styles.container}>
     <View style={styles.backButton}>
