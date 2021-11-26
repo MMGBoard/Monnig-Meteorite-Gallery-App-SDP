@@ -1,42 +1,38 @@
 import React from 'react'
-import { Text, View, StyleSheet, ImageBackground } from 'react-native';
-import { RadioButton, Button } from 'react-native-paper'
+import { View, StyleSheet } from 'react-native';
+import { RadioButton, Button, Text as PaperText } from 'react-native-paper'
 
 export default function LanguageSelectionScreen({navigation} : {navigation: any}) {
-    const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     const [value, setValue] = React.useState('english');
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <Text style={styles.greeting}> Welcome to TCU's Monnig Meteorite Gallery!</Text>
-                <Text style={styles.header}> Please select your language preference</Text>
+                <PaperText style={styles.greeting}> Welcome to TCU's Monnig Meteorite Gallery!</PaperText>
+                <PaperText style={styles.header}> Please select your language preference</PaperText>
                 <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
 
                     <View style={styles.radios} >
-                        <RadioButton value="english" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text}> English</Text>
+                        <RadioButton value="english"/>
+                        <PaperText style={styles.text}> English</PaperText>
                     </View>
 
                     <View style={styles.radios}>
-                        <RadioButton value="spanish" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text} >Spanish</Text>
+                        <RadioButton value="spanish"/>
+                        <PaperText style={styles.text} >Spanish</PaperText>
                     </View>
 
                     <View style={styles.radios}>
-                        <RadioButton value="french" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text}>  French</Text>
+                        <RadioButton value="french" />
+                        <PaperText style={styles.text}>  French</PaperText>
                     </View>
 
                 </RadioButton.Group>
 
                 <View style={{ alignItems: 'center'}}>
-                    <Button style={styles.button} mode="contained" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}>
+                    <Button style={styles.button} mode="contained" onPress={() => navigation.navigate('AcuityScreen')}>
                         Continue
                     </Button>
                 </View>
-
-            </ImageBackground>
         </View>
     );
 }
@@ -45,7 +41,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
     },
     radios: {
         width: "100%",
@@ -59,7 +54,6 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     greeting: {
-        color: "white",
         textAlign: "center",
         height: "20%",
         fontSize: 30,
@@ -67,13 +61,11 @@ const styles = StyleSheet.create({
         fontFamily: "Rationale"
     },
     header: {
-        color: "white",
         textAlign: "center",
         height: "15%",
         fontSize: 25
     },
     text: {
-        color: "white",
         textAlign: "center",
         fontSize: 25
     },

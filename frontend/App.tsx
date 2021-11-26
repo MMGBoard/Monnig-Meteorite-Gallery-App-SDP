@@ -13,6 +13,9 @@
  import { createNativeStackNavigator } from '@react-navigation/native-stack';
  import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
  import { StyleSheet } from 'react-native';
+ import { Provider as PaperProvider, useTheme } from 'react-native-paper';
+ import { SettingContext } from './src/components/SettingContextProvider';
+ import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
  
  import {
    AcuityScreen,
@@ -22,45 +25,56 @@
    SettingsScreen,
    AssistanceScreen
  } from './src/screens/';
- 
- 
  const Stack = createNativeStackNavigator();
  const TopTab = createMaterialTopTabNavigator();
 
  function TabNavigator() {
+  const dark = useTheme().dark;
    return (
-     <TopTab.Navigator 
-      screenOptions={{
-        tabBarIndicatorStyle: {backgroundColor: "#4D1979"}
-      }}>
+     <TopTab.Navigator>
        <TopTab.Screen name="Tour Assitance" component={AssistanceScreen} />
        <TopTab.Screen name="Meteorite Catalog" component={CatalogScreen} />
        <TopTab.Screen name="Settings" component={SettingsScreen} />
      </TopTab.Navigator>
    );
  }
+
+
  
  export default function App() {
+  const [isDarkTheme, setDarkTheme] = React.useState(false);
+  const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+  
+  const settingContext = React.useMemo(() => ({
+    toggleTheme: () => {
+      setDarkTheme( isDarkTheme => !isDarkTheme );
+    }
+  }), []);
+
+
    return (
-     <NavigationContainer>
-       <Stack.Navigator
-         initialRouteName="LanguageSelection"
-         screenOptions={{
-         headerShown: false,
-       }}>
-         <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} />
-         <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
-         <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
-         <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PaperProvider theme={theme}>
+        <SettingContext.Provider value={settingContext}>
+          <NavigationContainer theme={theme}>
+            <Stack.Navigator
+              initialRouteName="LanguageSelection"
+              screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} />
+            <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
+            <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SettingContext.Provider>  
+      </PaperProvider>
    );
  }
  
  const styles = StyleSheet.create({
    container: {
      flex: 1,
-     backgroundColor: '#fff',
      alignItems: 'center',
      justifyContent: 'center',
    },

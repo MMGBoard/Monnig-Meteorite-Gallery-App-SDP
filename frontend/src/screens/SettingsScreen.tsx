@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
-import { View, StyleSheet } from 'react-native';
-import { RadioButton, Button as PaperButton, Text as TextPaper, Divider as PaperDivider } from 'react-native-paper';
+import { Text, View, StyleSheet } from 'react-native';
+import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
 import Slider from '@react-native-community/slider';
+import { SettingContext } from '../components/SettingContextProvider';
 
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const languages = ["English", "Spanish", "French"]
@@ -10,6 +11,9 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
     const [brightnessValue, setbrightnessValue] = useState(15);
     const [fontSizeValue, setfontSizeValue] = useState(15);
     const [value, setValue] = React.useState('first');
+    const paperTheme = useTheme();
+    const {toggleTheme} = React.useContext(SettingContext);  
+    
     return (
       <>
         <View style={styles.topcontainer}>
@@ -94,6 +98,11 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           
         </View>
         <PaperDivider/>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <PaperText>Dark Mode</PaperText>
+          <View><Switch value={paperTheme.dark} onValueChange={toggleTheme}/>
+        </View>
+        </View>
         </View>
         <View style={styles.resetButton}>
           <PaperButton 
@@ -104,6 +113,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <TextPaper style={styles.label}>{'\u00A9'} MMG App</TextPaper>
       </>
+
     );
 }
 
