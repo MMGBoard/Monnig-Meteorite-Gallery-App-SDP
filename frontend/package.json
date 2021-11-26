@@ -13,7 +13,9 @@
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/material": "^5.0.6",
+    "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/checkbox": "^0.5.9",
+    "@react-native-community/slider": "^4.1.12",
     "@react-native-community/viewpager": "^5.0.11",
     "@react-native-firebase/app": "^13.0.1",
     "@react-native-firebase/database": "^13.0.1",
@@ -30,6 +32,8 @@
     "firestore-export-import": "^0.17.0",
     "react": "^17.0.2",
     "react-native": "0.66.2",
+
+    "react-native-dropdown-picker": "^5.2.3",
     "react-native-appearance": "^0.3.4",
     "react-native-elements": "^3.4.2",
     "react-native-event-listeners": "^1.0.7",
@@ -39,6 +43,7 @@
     "react-native-picker-select": "^8.0.4",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.9.0",
+    "react-native-select-dropdown": "^1.4.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^9.0.0"
   },
