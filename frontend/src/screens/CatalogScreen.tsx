@@ -58,6 +58,5 @@ export default function CatalogScreen() {
           </View>
         )} />
     </View>
-
   );
 }
