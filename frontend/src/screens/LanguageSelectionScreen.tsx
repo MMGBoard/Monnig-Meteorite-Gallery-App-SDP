@@ -29,8 +29,6 @@ export default function LanguageSelectionScreen({navigation} : {navigation: any}
                     <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
                     {console.log(checked)}
                 </View>
-
-            </ImageBackground>
         </View>
     );
 }
@@ -39,7 +37,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
     },
     radioContainer: {
         flex: 1,
@@ -50,7 +47,6 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     greeting: {
-        color: "white",
         textAlign: "center",
         height: "20%",
         fontSize: 38,
@@ -58,7 +54,6 @@ const styles = StyleSheet.create({
         fontFamily: "Rationale"
     },
     header: {
-        color: "white",
         textAlign: "center",
         height: "15%",
         fontSize: 32

@@ -10,7 +10,6 @@ export default function CatalogScreen({navigation}: {navigation: any}) {
   const data = firestore()
         .collection('meteorites')
         // Filter results
-        .where('COUNTRY', '==', 'USA')
         .get().then(querySnapshot => {
             console.log("No of meteorites found in USA: " + querySnapshot.docs.length);
         });
