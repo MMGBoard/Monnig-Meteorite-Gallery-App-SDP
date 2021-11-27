@@ -62,9 +62,7 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
             onPress={() => navigation.navigate('AcuityScreen')}
           >Back</PaperButton>
         </View>
-        <PaperText style={{ marginTop: 50, justifyContent: 'center', alignItems: 'center' }}>Dark Mode</PaperText><View><Switch value={paperTheme.dark}
-        onValueChange={toggleTheme}
-        /></View>
+        
         <View style={styles.container}>
           <PaperText style={styles.header}>Select colors you are not able to see:</PaperText>
           <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
