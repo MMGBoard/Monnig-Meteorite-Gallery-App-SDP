@@ -1,42 +1,34 @@
 import React from 'react'
-import { Text, View, StyleSheet, ImageBackground } from 'react-native';
-import { RadioButton, Button } from 'react-native-paper'
+import { Text, View, Button, StyleSheet, ImageBackground } from 'react-native';
+import { RadioButton } from 'react-native-paper'
 
 export default function LanguageSelectionScreen({navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
-    const [value, setValue] = React.useState('english');
+    const [checked, setChecked] = React.useState('firstlanguage');
 
     return (
         <View style={styles.container}>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 <Text style={styles.greeting}> Welcome to TCU's Monnig Meteorite Gallery!</Text>
                 <Text style={styles.header}> Please select your language preference</Text>
-                <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
 
-                    <View style={styles.radios} >
-                        <RadioButton value="english" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text}> English</Text>
+                    <View style={{alignSelf: 'center', width: "35%"}}>
+                        <RadioButton.Group onValueChange={checked => setChecked(checked)} value={checked}>
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white', width: "50%"}}
+                            color="#4D1979" uncheckedColor="white" label="English" value="firstlanguage" />
+
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white'}}
+                            color="#4D1979" uncheckedColor="white" label="Spanish" value="secondlanguage" />
+                            
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white'}}
+                            color="#4D1979" uncheckedColor="white" label="French" value="thirdlanguage" />
+                        </RadioButton.Group>
                     </View>
 
-                    <View style={styles.radios}>
-                        <RadioButton value="spanish" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text} >Spanish</Text>
-                    </View>
-
-                    <View style={styles.radios}>
-                        <RadioButton value="french" uncheckedColor="white" color="#4D1979"/>
-                        <Text style={styles.text}>  French</Text>
-                    </View>
-
-                </RadioButton.Group>
-
-                <View style={{ alignItems: 'center'}}>
-                    <Button style={styles.button} mode="contained" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}>
-                        Continue
-                    </Button>
+                <View style={styles.continueButton}>
+                    <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
+                    {console.log(checked)}
                 </View>
-
-            </ImageBackground>
         </View>
     );
 }
@@ -45,41 +37,33 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
     },
-    radios: {
-        width: "100%",
-        flexDirection: "row",
-        justifyContent: 'center',
-        height: "15%"
-    },
+    radioContainer: {
+        flex: 1,
+      },
     image: {
         width: "100%",
         flex: 1,
         justifyContent: "center"
     },
     greeting: {
-        color: "white",
         textAlign: "center",
         height: "20%",
-        fontSize: 30,
-        paddingTop: 10,
+        fontSize: 38,
+        paddingTop: "10%",
         fontFamily: "Rationale"
     },
     header: {
-        color: "white",
         textAlign: "center",
         height: "15%",
-        fontSize: 25
+        fontSize: 32
     },
-    text: {
-        color: "white",
-        textAlign: "center",
-        fontSize: 25
-    },
-    button: {
+    continueButton: {
+        flex: 1,
+        marginTop: 250,
+        marginBottom: 50,
         width: "45%",
-        loading: true,
-        alignItems: 'center'
+        alignSelf: 'center',
+        bottom:0
     }
 });

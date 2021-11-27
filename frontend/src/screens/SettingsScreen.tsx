@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
-import { View, StyleSheet } from 'react-native';
-import { RadioButton, Button as PaperButton, Text as TextPaper, Divider as PaperDivider } from 'react-native-paper';
+import { Text, View, StyleSheet } from 'react-native';
+import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
 import Slider from '@react-native-community/slider';
+import { SettingContext } from '../components/SettingContextProvider';
 
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const languages = ["English", "Spanish", "French"]
@@ -10,10 +11,20 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
     const [brightnessValue, setbrightnessValue] = useState(15);
     const [fontSizeValue, setfontSizeValue] = useState(15);
     const [value, setValue] = React.useState('first');
+    const paperTheme = useTheme();
+    const {toggleTheme} = React.useContext(SettingContext);  
+    
     return (
       <>
+        <View style={{width: "100%", flexDirection: "row", justifyContent: "flex-start", paddingTop: "5%"}}>
+          <PaperText style={styles.midlabel}>Dark Mode:</PaperText>
+          <Switch style={{marginTop: 20}} value={paperTheme.dark} onValueChange={toggleTheme}/>
+        </View>
+
+        <PaperDivider/>
+
         <View style={styles.topcontainer}>
-          <TextPaper style={styles.toplabel}>Language Preference:</TextPaper>
+          <PaperText style={styles.toplabel}>Language Preference:</PaperText>
           <SelectDropdown
               data={languages}
               onSelect={(selectedItem, index) => {
@@ -31,7 +42,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <TextPaper style={styles.label}>    Brightness:</TextPaper>
+          <PaperText style={styles.label}>  Brightness:</PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
             maximumValue={100}
@@ -44,15 +55,15 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
               (sliderValue) => setbrightnessValue(sliderValue)
             }
           />
-          <TextPaper style={styles.label}>{brightnessValue}%</TextPaper>
+          <PaperText style={styles.label}>{brightnessValue}%</PaperText>
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <TextPaper style={styles.label}>Font Size:</TextPaper>
+          <PaperText style={styles.label}>Font Size:  </PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-            maximumValue={100}
-            minimumValue={0}
+            maximumValue={48}
+            minimumValue={12}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
             step={1}
@@ -61,10 +72,13 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
               (sliderValue) => setfontSizeValue(sliderValue)
             }
           />
-          <TextPaper style={styles.label}>{fontSizeValue}</TextPaper>
+          <PaperText style={styles.label}>{fontSizeValue}</PaperText>
         </View>
         <PaperDivider/>
-        <TextPaper style={styles.midlabel}>Color Blindness Type:</TextPaper>
+        
+        
+        <PaperDivider/>
+        <PaperText style={styles.midlabel}>Color Blindness Type:</PaperText>
         <View style={styles.radioContainer}>
           <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
               <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
@@ -76,7 +90,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           </RadioButton.Group>
           <PaperDivider/>
           <View style={styles.container}>
-            <TextPaper style={styles.label}>Visual Impairment Type:</TextPaper>
+            <PaperText style={styles.label}>Visual Impairment Type:  </PaperText>
             <SelectDropdown
               data={visiontype}
               onSelect={(selectedItem, index) => {
@@ -91,19 +105,21 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
             return item
             }}
           />
-          
+
         </View>
         <PaperDivider/>
+        
         </View>
         <View style={styles.resetButton}>
           <PaperButton 
               mode="contained" color="#DD1223"
               onPress={() => navigation.navigate('LanguageSelectionScreen')}>
-              <TextPaper style={{color: "white"}}>Reset Settings</TextPaper>
+              <PaperText style={{color: "white"}}>Reset Settings</PaperText>
           </PaperButton>
         </View>
-        <TextPaper style={styles.label}>{'\u00A9'} MMG App</TextPaper>
+        <PaperText style={styles.label}>{'\u00A9'} MMG App</PaperText>
       </>
+
     );
 }
 
@@ -112,14 +128,13 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: 'center',
-    marginTop: "30%"
+    marginTop: "3%"
   },
   container: {
     width: "100%", 
     flexDirection: "row", 
     justifyContent: 'center',
     marginTop: "3%" 
-  
   },
   bottomcontainer: {
     width: "100%",
