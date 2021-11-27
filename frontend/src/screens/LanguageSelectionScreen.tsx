@@ -8,7 +8,7 @@ export default function LanguageSelectionScreen({navigation} : {navigation: any}
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.image} />
                 <Text style={styles.greeting}> Welcome to TCU's Monnig Meteorite Gallery!</Text>
                 <Text style={styles.header}> Please select your language preference</Text>
 
