@@ -4,8 +4,10 @@ import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, Toucha
 import { SettingContext } from '../components/SettingContextProvider';
 
 export default function AcuityScreen({navigation} : {navigation: any}) {
-  const [value, setValue] = React.useState('first');
-  
+
+  const [flexDirection, setflexDirection] = useState("column");
+  const [value, setValue] = React.useState('secondChoice');
+ 
   return (
     <View>
       <View style={styles.backButton}>

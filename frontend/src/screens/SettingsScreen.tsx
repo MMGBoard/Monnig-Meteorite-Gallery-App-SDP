@@ -62,8 +62,8 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           <PaperText style={styles.label}>Font Size:  </PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-            maximumValue={100}
-            minimumValue={0}
+            maximumValue={48}
+            minimumValue={12}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
             step={1}
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
     flexDirection: "row", 
     justifyContent: 'center',
     marginTop: "3%" 
-  
   },
   bottomcontainer: {
     width: "100%",
