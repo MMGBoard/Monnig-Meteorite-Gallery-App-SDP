@@ -2,7 +2,14 @@ import React, { Component } from 'react'
 import { Text, View, Button, StyleSheet, ImageBackground } from 'react-native';
 import { RadioButton } from 'react-native-paper'
 
-var translatedResult = new Array();
+function translate(value:string, target:string){
+    return translateRequest(value,target)
+                        .then(response => {
+                            var t = JSON.stringify(response.data.translations[0].translatedText)
+                            console.log("logged ",t)
+                            return t;
+                        })
+}
 
 export function translateRequest(value:string, target: string){
     let fromLang = 'en' ; // You can also write in a string format in any language 'en'
@@ -31,7 +38,6 @@ export function translateRequest(value:string, target: string){
         console.log("response from google again: ", response.data.translations[0].translatedText);
         transTxt = response.data.translations[0].translatedText;
         console.log ('data from the response', transTxt)
-        translatedResult[0] = transTxt
         console.log("response value: ",response)
         return response;
       })
@@ -46,13 +52,15 @@ export function translateRequest(value:string, target: string){
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     const [checked, setChecked] = React.useState('en');
-    let t = null;
-    
-    translateRequest("hello","fr").then(response => console.log(JSON.stringify(response.data.translations[0].translatedText)))
 
     return (
         <View style={styles.container}>
-                <Text style={styles.greeting}>{}</Text>
+               
+                <Text style={styles.greeting}>
+                    {
+                        translate("hello","fr")
+                    }
+                </Text>
                 <Text style={styles.header}> Please select your language preference</Text>
 
                     <View style={{alignSelf: 'center', width: "35%"}}>
