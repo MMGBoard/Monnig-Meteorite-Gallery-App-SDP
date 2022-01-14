@@ -23,7 +23,6 @@ export default function LanguageSelectionScreen({navigation} : {navigation: any}
                 </View>
             <View style={styles.continueButton}>
                 <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
-                {console.log(checked)}
             </View>
         </View>
     );
