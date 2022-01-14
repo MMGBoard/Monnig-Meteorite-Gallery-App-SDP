@@ -45,7 +45,7 @@ export default function CatalogScreen() {
         data={meteorites}
         numColumns={2}
         renderItem={({ item }) => (
-          <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300 }}>
+          <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
             <Card>
               <Card.Cover source={{ uri: item.PICTURES}} resizeMode='cover'/>
               <Card.Title title={item.METEORITE_} subtitle={item.CATALOG} />
