@@ -23,7 +23,8 @@
    LanguageSelectionScreen,
    CatalogScreen,
    SettingsScreen,
-   AssistanceScreen
+   AssistanceScreen,
+   DetailScreen
  } from './src/screens/';
  const Stack = createNativeStackNavigator();
  const TopTab = createMaterialTopTabNavigator();
@@ -65,6 +66,7 @@
             <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
             <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
             <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name="DetailScreen" component={DetailScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </SettingContext.Provider>  
