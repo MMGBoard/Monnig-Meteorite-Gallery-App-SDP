@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, 
 import firestore from '@react-native-firebase/firestore';
 import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
 
-export default function CatalogScreen() {
+export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
 
@@ -52,7 +52,7 @@ export default function CatalogScreen() {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button>View</Button>
+                <Button onPress={() => navigation.navigate('DisplayScreen')}>View</Button>
               </Card.Actions>
             </Card>
           </View>

@@ -14,14 +14,14 @@ export default function LanguageSelectionScreen({navigation} : {navigation: any}
 
                     <View style={{alignSelf: 'center', width: "35%"}}>
                         <RadioButton.Group onValueChange={checked => setChecked(checked)} value={checked}>
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white', width: "50%"}}
-                            color="#4D1979" uncheckedColor="white" label="English" value="firstlanguage" />
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                            color="#4D1979" label="English" value="firstlanguage" />
 
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white'}}
-                            color="#4D1979" uncheckedColor="white" label="Spanish" value="secondlanguage" />
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
+                            color="#4D1979" label="Spanish" value="secondlanguage" />
                             
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', color: 'white'}}
-                            color="#4D1979" uncheckedColor="white" label="French" value="thirdlanguage" />
+                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
+                            color="#4D1979" label="French" value="thirdlanguage" />
                         </RadioButton.Group>
                     </View>
 
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     radioContainer: {
         flex: 1,
-      },
+    },
     image: {
         width: "100%",
         flex: 1,
