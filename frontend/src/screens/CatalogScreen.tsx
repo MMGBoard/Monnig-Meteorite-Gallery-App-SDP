@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function CatalogScreen() {
+export default function CatalogScreen({navigation} : {navigation: any}, {route} : {route: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
 
   const [searchQuery, setSearchQuery] = React.useState(''); // Initial component state setting 
   const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query); // Method to setSearchQuery to what is written in bar
+
+  const detailsStack = createNativeStackNavigator();
 
   // Component to read data from Firestore database and initializes meteors array.
   useEffect(() => {
@@ -37,10 +40,50 @@ export default function CatalogScreen() {
     return <ActivityIndicator />;
   }
 
+const onSubmitted = () => {
+  if (searchQuery != ""){
+    console.log("Search query: ", searchQuery);
+    firestore()
+    .collection('meteorites')
+    .where('METEORITE_', 'in', [searchQuery])
+    .get()
+    .then(querySnapshot => {
+      const meteors: React.SetStateAction<any[]> =  []
+
+      querySnapshot.forEach(documentSnapshot => {
+        meteors.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        });
+      });
+
+      setMeteorites(meteors);
+      setLoading(false);
+    });
+  }
+  if (searchQuery == ""){
+    firestore()
+      .collection('meteorites')
+      .onSnapshot(querySnapshot => {
+        const meteors: React.SetStateAction<any[]> =  []
+  
+        querySnapshot.forEach(documentSnapshot => {
+          meteors.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+  
+        setMeteorites(meteors);
+        setLoading(false);
+      });
+  }
+}
+
 // Render return
   return (
     <View>
-      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
+      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>
       <FlatList style={{ margin: 5 }}
         data={meteorites}
         numColumns={2}
@@ -53,7 +96,7 @@ export default function CatalogScreen() {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button>View</Button>
+                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>View</Button>
               </Card.Actions>
             </Card>
           </View>
