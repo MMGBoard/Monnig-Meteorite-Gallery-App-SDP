@@ -4,7 +4,7 @@ import { RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
 
 export async function translateRequest(value:string, target: string){
-    let fromLang = 'en';        // source lang to translate from ( default is English )
+    let fromLang = 'en';        // source lsang to translate from ( default is English )
     let toLang = target;        // target lang to translate to
     let text = value;           // string to translate to toLang
 
