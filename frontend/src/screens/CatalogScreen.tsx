@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function CatalogScreen({navigation} : {navigation: any}) {
+export default function CatalogScreen({navigation} : {navigation: any}, {route} : {route: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
 
@@ -96,7 +96,7 @@ const onSubmitted = () => {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => navigation.navigate('DetailScreen')}>View</Button>
+                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>View</Button>
               </Card.Actions>
             </Card>
           </View>

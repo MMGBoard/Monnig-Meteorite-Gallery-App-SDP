@@ -1,71 +1,116 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, Switch } from 'react-native';
-import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, TouchableRipple } from 'react-native-paper';
-import { SettingContext } from '../components/SettingContextProvider';
+import React, { useState, useEffect } from 'react';
+import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText } from 'react-native-paper';
 
-export default function CardScreen({navigation} : {navigation: any}) {
+export default function DetailScreen({navigation} : {navigation: any}, {route} : {route: any}) { //Add Params for passing card
+    const [flexDirection, setflexDirection] = useState("column");
+  
 
-  const [flexDirection, setflexDirection] = useState("column");
-  const [value, setValue] = React.useState('secondChoice');
- 
-  return (
-    <View>
-      <View style={styles.backButton}>
-        <PaperButton 
-          icon="chevron-left" mode="contained"
-          onPress={() => navigation.navigate('LanguageSelectionScreen')}
-        >Back</PaperButton>
+    return (
+        <View>
+            <View style={styles.backButton}>
+                <PaperButton 
+                    icon="chevron-left" mode="contained"
+                    onPress={() => navigation.goBack()}
+                >Back</PaperButton>
+            </View>
+            <View style={styles.container}>
+                <PaperSurface  style={styles.surface}>
+                    <Image source={{}}
+                    style={{ width: 600, height: 500, marginBottom: 5 }}/>
+                    <View style={styles.textContainer}>
+                    <PaperDivider/>
+                        <PaperText style={styles.label}>Name</PaperText>
+                        <PaperText style={styles.year}>Year</PaperText>
+                        <PaperText style={styles.description}>Desc</PaperText>
+                    </View>
+                </PaperSurface>
+                <View style={styles.buttonContainer}>
+                    <PaperButton 
+                        icon="play-circle" mode="contained"
+                        //Make button change to pause-circle when pressed
+                        //onPress={() => }
+                        >Play</PaperButton>
+                    <PaperButton 
+                        icon="stop-circle" mode="contained"
+                        //Make button change to pause when pressed
+                        //onPress={() => ()}
+                        >Stop</PaperButton>
+                </View>
+            </View>
         </View>
-        <View style={styles.container}>
-        <View style={styles.radioContainer}>
-        <PaperText style={styles.label}>Please select your prefered font-size:</PaperText>
-          <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
-            <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="firstChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 24, fontFamily: 'ROBOTO'}} 
-                label="Welcome to TCU!" value="secondChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 36, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="thirdChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 48, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="fourthChoice" />
-          </RadioButton.Group>
-        </View></View>
-        <View> 
-          <View style={styles.nextButton}>  
-            <PaperButton mode="contained"
-            onPress={() => navigation.navigate('ColorBlindnessScreen')}>
-            Next</PaperButton>
-          </View>
-      </View>   
-    </View>
-  );
+    );
 }
 
+
 const styles = StyleSheet.create({
-  label: {
-    textAlign: "left",
-    marginRight: 10,
-    fontSize: 24,
-    fontFamily: 'ROBOTO',
-    marginBottom: 30
-  },
-  backButton: {
-    marginTop: 30,
-    marginLeft: 30,
-    alignSelf: 'flex-start'
-  },
-  container: {
-    justifyContent: 'center',
-    marginLeft: 100,
-    marginRight: 100,
-  },
-  radioContainer: {
-    marginTop: 100,
-  },
-  nextButton: {
-    width: "35%",
-    marginTop: 500,
-    alignSelf: 'center',
-    bottom:0
-  },
+    backButton: {
+        marginTop: 30,
+        marginLeft: 30,
+        alignSelf: 'flex-start',
+        marginBottom: 20
+    },
+    pauseButton: {
+        marginTop: 30,
+        marginLeft: 30,
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    playButton: {
+        alignSelf: 'flex-start',
+        justifyContent: 'center'
+    },
+    container: {
+        alignContent: 'flex-start',
+        justifyContent: 'center',
+        marginLeft: 100,
+        marginRight: 100,
+        marginTop: 50
+    },
+    buttonContainer: {
+        alignContent: 'flex-start',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginLeft: 100,
+        marginRight: 100,
+        marginTop: 50
+    },
+    textContainer: {
+        marginTop: 10,
+        justifyContent: 'flex-start',
+        alignText: 'left',
+        width: 700
+    },
+    label: {
+        textAlign: "left",
+        marginRight: 10,
+        fontSize: 24,
+        fontFamily: 'ROBOTO',
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    year: {
+        textAlign: "left",
+        marginRight: 10,
+        fontSize: 14,
+        fontFamily: 'ROBOTO',
+        fontStyle: 'italic',
+        marginBottom: 5
+    },
+    description: {
+        textAlign: "left",
+        marginRight: 10,
+        fontSize: 20,
+        fontFamily: 'ROBOTO',
+        marginBottom: 5
+    },
+    surface: {
+        padding: 8,
+        height: 800,
+        width: 700,
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        elevation: 4,
+    }
 });
