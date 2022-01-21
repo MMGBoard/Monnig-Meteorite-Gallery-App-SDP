@@ -39,16 +39,24 @@
    );
  }
 
-
- 
  export default function App() {
   const [isDarkTheme, setDarkTheme] = React.useState(false);
+  const [currentLang, setCurrentLang] = React.useState("en");
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
   
   const settingContext = React.useMemo(() => ({
     toggleTheme: () => {
       setDarkTheme( isDarkTheme => !isDarkTheme );
-    }
+    },
+    changeLangToEng: () => {
+      setCurrentLang( currentLang => "eng")
+    },
+    changeLangToEs: () => {
+      setCurrentLang( currentLang => "es")
+    },
+    changeLangToFr: () => {
+      setCurrentLang( currentLang => "fr")
+    },
   }), []);
 
 
