@@ -12,8 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
+    "@google-cloud/translate": "^6.3.1",
     "@mui/material": "^5.0.6",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
+    "@react-native-async-storage/async-storage": "^1.15.15",
     "@react-native-community/checkbox": "^0.5.9",
     "@react-native-community/slider": "^4.1.12",
     "@react-native-community/viewpager": "^5.0.11",
@@ -41,11 +43,13 @@
     "react-native-paper": "^4.10.0",
     "react-native-paper-dropdown": "^1.0.7",
     "react-native-picker-select": "^8.0.4",
+    "react-native-power-translator": "^1.1.1",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.9.0",
     "react-native-select-dropdown": "^1.4.0",
     "react-native-tab-view": "^3.1.1",
-    "react-native-vector-icons": "^9.0.0"
+    "react-native-vector-icons": "^9.0.0",
+    "translate-google-api": "^1.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
