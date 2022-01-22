@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from 'react' ;
 import { Text, View, Button, StyleSheet } from 'react-native' ;
 import { RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
+import { SettingContext } from '../components/SettingContextProvider';
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -35,9 +36,26 @@ export async function translateRequest(value:string, target: string){
     }
 };
 
+export function startTranslation(destinationLang: string) {
+    const { changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingContext); 
+    if (destinationLang == "en") {
+        changeLangToEn
+    } 
+    else if (destinationLang == "es") {
+        console.log("ESESES")
+        changeLangToEs
+    } 
+    else if (destinationLang == "fr") {
+        changeLangToFr
+    }  
+}
+
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     const [checked, setChecked] = React.useState('en');
+    startTranslation("es")
+    const { currentLang } = React.useContext(SettingContext); 
+    console.log("Hollaaa: " + currentLang)
 
     return (
         <View style={styles.container}>
