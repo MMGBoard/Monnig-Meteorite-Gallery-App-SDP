@@ -1,8 +1,11 @@
 import React, { Component, useEffect, useState } from 'react' ;
-import { Text, View, Button, StyleSheet } from 'react-native' ;
+import { Text, View, Button, StyleSheet, Alert} from 'react-native' ;
 import { RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
 import { SettingContext } from '../components/SettingContextProvider';
+
+//const currentLang = React.useContext(SettingContext);
+const currentLang = 'en'
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -42,7 +45,6 @@ export function startTranslation(destinationLang: string) {
         changeLangToEn
     } 
     else if (destinationLang == "es") {
-        console.log("ESESES")
         changeLangToEs
     } 
     else if (destinationLang == "fr") {
@@ -50,12 +52,27 @@ export function startTranslation(destinationLang: string) {
     }  
 }
 
+export function handleLangChange(checked:any,setChecked:any){
+    return (changeLangAlert(checked,setChecked),setChecked(currentLang))
+}
+
+// This is a functional component that render's an alert when the user selects a language
+const changeLangAlert = (checked:any,setChecked:any) =>
+{
+    Alert.alert(
+        "Warning!",
+        "You are about to translate your preferred language to "+checked,
+        [
+            { text: "Cancel", style: "cancel"},
+            { text: "OK", onPress: () => setChecked(checked)}
+        ]
+    )
+}
+
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
-    const [checked, setChecked] = React.useState('en');
+    let [_checked, setChecked] = React.useState('en');
     startTranslation("es")
-    const { currentLang } = React.useContext(SettingContext); 
-    console.log("Hollaaa: " + currentLang)
 
     return (
         <View style={styles.container}>
@@ -68,7 +85,7 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                 </Text>
 
                     <View style={{alignSelf: 'center', width: "35%"}}>
-                        <RadioButton.Group onValueChange={checked => setChecked(checked)} value={checked}>
+                        <RadioButton.Group  onValueChange={_checked => handleLangChange(_checked,setChecked)} value={_checked}>
                             <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
                             color="#4D1979" label="English" value="en" />
 
@@ -81,7 +98,7 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                     </View>
                 <View style={styles.continueButton}>
                     <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
-                    {console.log("checked: ",checked)}
+                    {console.log("checked: ",_checked)}
                 </View>
         </View>
     );
