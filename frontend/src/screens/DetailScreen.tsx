@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText } from 'react-native-paper';
+import { Button as PaperButton, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText, IconButton as PaperIconButton } from 'react-native-paper';
+import { CustomDefaultTheme } from '../styles/theme';
 
 export default function DetailScreen({navigation} : {navigation: any}, {route} : {route: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
@@ -18,7 +19,7 @@ export default function DetailScreen({navigation} : {navigation: any}, {route} :
             <View style={styles.container}>
                 <PaperSurface  style={styles.surface}>
                     <Image source={{}}
-                    style={{ width: 600, height: 500, marginBottom: 5 }}/>
+                    style={styles.image}/>
                     <View style={styles.textContainer}>
                     <PaperDivider/>
                         <PaperText style={styles.label}>Name</PaperText>
@@ -27,16 +28,16 @@ export default function DetailScreen({navigation} : {navigation: any}, {route} :
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
-                    <PaperButton 
-                        icon="play-circle" mode="contained"
+                    <PaperIconButton 
+                        icon="play-circle" size = {100} color = {CustomDefaultTheme.colors.primary}
                         //Make button change to pause-circle when pressed
                         //onPress={() => }
-                        >Play</PaperButton>
-                    <PaperButton 
-                        icon="stop-circle" mode="contained"
+                        ></PaperIconButton>
+                    <PaperIconButton 
+                        icon="stop-circle" size={100} color = {CustomDefaultTheme.colors.primary}
                         //Make button change to pause when pressed
                         //onPress={() => ()}
-                        >Stop</PaperButton>
+                        >Stop</PaperIconButton>
                 </View>
             </View>
         </View>
@@ -48,8 +49,8 @@ const styles = StyleSheet.create({
     backButton: {
         marginTop: 30,
         marginLeft: 30,
-        alignSelf: 'flex-start',
-        marginBottom: 20
+        height: '5%',
+        alignSelf: 'flex-start'
     },
     pauseButton: {
         marginTop: 30,
@@ -64,53 +65,57 @@ const styles = StyleSheet.create({
     container: {
         alignContent: 'flex-start',
         justifyContent: 'center',
-        marginLeft: 100,
-        marginRight: 100,
-        marginTop: 50
+        marginLeft: '10%',
+        marginRight: '10%',
+        height: '92%'
     },
     buttonContainer: {
         alignContent: 'flex-start',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginLeft: 100,
-        marginRight: 100,
-        marginTop: 50
+        marginLeft: '20%',
+        marginRight: '20%',
+        marginTop: 10
     },
     textContainer: {
         marginTop: 10,
+        height: '35%',
         justifyContent: 'flex-start',
         alignText: 'left',
-        width: 700
+        width: '100%'
     },
     label: {
         textAlign: "left",
-        marginRight: 10,
-        fontSize: 24,
+        height: '13%',
+        fontSize: 26,
         fontFamily: 'ROBOTO',
         fontWeight: 'bold',
         marginBottom: 5
     },
     year: {
         textAlign: "left",
-        marginRight: 10,
-        fontSize: 14,
+        height: '10%',
+        fontSize: 18,
         fontFamily: 'ROBOTO',
         fontStyle: 'italic',
         marginBottom: 5
     },
     description: {
         textAlign: "left",
-        marginRight: 10,
         fontSize: 20,
-        fontFamily: 'ROBOTO',
-        marginBottom: 5
+        fontFamily: 'ROBOTO'
     },
     surface: {
         padding: 8,
-        height: 800,
-        width: 700,
+        height: '85%',
+        width: '100%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         elevation: 4,
+    },
+    image: {
+        width: '100%',
+        height: '65%',
+        marginBottom: 5 
     }
 });
