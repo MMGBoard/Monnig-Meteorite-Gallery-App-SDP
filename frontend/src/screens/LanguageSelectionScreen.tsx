@@ -40,19 +40,6 @@ export async function translateRequest(value:string, target: string){
     }
 };
 
-export function startTranslation(destinationLang: string) {
-    const { changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(ThemeContext); 
-    if (destinationLang == "en") {
-        changeLangToEn
-    } 
-    else if (destinationLang == "es") {
-        changeLangToEs
-    } 
-    else if (destinationLang == "fr") {
-        changeLangToFr
-    }  
-}
-
 export function handleLangChange(checked:any,setChecked:any){
     return (changeLangAlert(checked,setChecked),setChecked(currentLang))
 }
@@ -73,13 +60,7 @@ const changeLangAlert = (checked:any,setChecked:any) =>
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     let [_checked, setChecked] = React.useState('en');
-    startTranslation("es")
-
     const { currentLang, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
-    //console.log("CurrentLang from LangSelectScreen:  " + currentLang)
-    //changeLangToFr
-    //console.log("CurrentLang from LangSelectScreen:  " + currentLang)
-    //const [currentLanguageState] = React.useContext(SettingsContext);
 
     return (
         <View style={styles.container}>
@@ -107,7 +88,6 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                 <Button title="Continue" color="#4D1979" onPress={() => changeLangToFr()}></Button>
                 <Button title="Continue" color="#4D1979" onPress={() => console.log("CLang: " + currentLang)}></Button>
                 <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
-
             </View>
         </View>
     );
