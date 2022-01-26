@@ -29,12 +29,12 @@ export default function DetailScreen({navigation} : {navigation: any}, {route} :
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
                     <PaperIconButton 
-                        icon="play-circle" size = {100} color = {CustomDefaultTheme.colors.primary}
+                        icon="play-circle" size = {130} color = {CustomDefaultTheme.colors.primary}
                         //Make button change to pause-circle when pressed
                         //onPress={() => }
                         ></PaperIconButton>
                     <PaperIconButton 
-                        icon="stop-circle" size={100} color = {CustomDefaultTheme.colors.primary}
+                        icon="stop-circle" size={130} color = {CustomDefaultTheme.colors.primary}
                         //Make button change to pause when pressed
                         //onPress={() => ()}
                         >Stop</PaperIconButton>
@@ -73,9 +73,8 @@ const styles = StyleSheet.create({
         alignContent: 'flex-start',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginLeft: '20%',
-        marginRight: '20%',
-        marginTop: 10
+        marginLeft: '25%',
+        marginRight: '25%'
     },
     textContainer: {
         marginTop: 10,
@@ -90,7 +89,9 @@ const styles = StyleSheet.create({
         fontSize: 26,
         fontFamily: 'ROBOTO',
         fontWeight: 'bold',
-        marginBottom: 5
+        marginBottom: 5,
+        marginTop: 15,
+        marginLeft:15
     },
     year: {
         textAlign: "left",
@@ -98,16 +99,18 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'ROBOTO',
         fontStyle: 'italic',
-        marginBottom: 5
+        marginBottom: 5,
+        marginLeft:15
     },
     description: {
         textAlign: "left",
         fontSize: 20,
-        fontFamily: 'ROBOTO'
+        fontFamily: 'ROBOTO',
+        marginLeft:15
     },
     surface: {
         padding: 8,
-        height: '85%',
+        height: '82%',
         width: '100%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
