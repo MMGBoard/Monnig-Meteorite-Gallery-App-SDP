@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Button as PaperButton, Text as PaperText, Switch, useTheme } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
-import { SettingContext } from '../components/SettingContextProvider';
+import { ThemeContext } from '../components/ThemeContextProvider';
 
 const colors = [
   { id: 1, txt: 'Red', isChecked: false },
@@ -15,7 +15,7 @@ const colors = [
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
   const [items, setItems] = useState(colors);
   const paperTheme = useTheme();
-  const {toggleTheme} = React.useContext(SettingContext);  
+  const {toggleTheme} = React.useContext(ThemeContext);  
   
   const handleChange = (id: number) => {
     let temp = items.map((color) => {

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
 import Slider from '@react-native-community/slider';
-import { SettingContext } from '../components/SettingContextProvider';
+import { ThemeContext } from '../components/ThemeContextProvider';
 
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const languages = ["English", "Spanish", "French"]
@@ -12,8 +12,8 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
     const [fontSizeValue, setfontSizeValue] = useState(15);
     const [value, setValue] = React.useState('first');
     const paperTheme = useTheme();
-    const {toggleTheme} = React.useContext(SettingContext);  
-    
+    const {toggleTheme} = React.useContext(ThemeContext);  
+
     return (
       <>
         <View style={{width: "100%", flexDirection: "row", justifyContent: "flex-start", paddingTop: "5%"}}>

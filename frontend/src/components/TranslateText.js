@@ -14,7 +14,7 @@ class TranslateText extends Component {
     }
 
     async componentDidMount(){
-        console.log(this.props.lang)
+        console.log("CurrentLang from TranslateText.js:  " + this.props.lang)
         if(this.props.lang != 'en'){  // if target lang is 'en' => do not translate and just return string
             await this.doTranslate()
         }

@@ -14,7 +14,8 @@
  import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
  import { StyleSheet } from 'react-native';
  import { Provider as PaperProvider, useTheme } from 'react-native-paper';
- import { SettingContext } from './src/components/SettingContextProvider';
+ import { ThemeContext } from './src/components/ThemeContextProvider';
+ import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
  
  import {
@@ -42,43 +43,36 @@
 
  export default function App() {
   const [isDarkTheme, setDarkTheme] = React.useState(false);
-  const [currentLang, setCurrentLang] = React.useState("en");
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-  
-  const settingContext = React.useMemo(() => ({
+
+
+  const themeContext = {
     toggleTheme: () => {
       setDarkTheme( isDarkTheme => !isDarkTheme );
     },
-    changeLangToEng: () => {
-      setCurrentLang( currentLang => "eng")
-    },
-    changeLangToEs: () => {
-      setCurrentLang( currentLang => "es")
-    },
-    changeLangToFr: () => {
-      setCurrentLang( currentLang => "fr")
-    },
-  }), []);
+  }
 
 
    return (
       <PaperProvider theme={theme}>
-        <SettingContext.Provider value={settingContext}>
-          <NavigationContainer theme={theme}>
-            <Stack.Navigator
-              initialRouteName="LanguageSelection"
-              screenOptions={{
-              headerShown: false,
-            }}>
-            <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} />
-            <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
-            <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
-            <Stack.Screen name="DetailScreen" component={DetailScreen} />
-            <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </SettingContext.Provider>  
+        <ThemeContext.Provider value={themeContext}>
+          <SettingsContextProvider>
+            <NavigationContainer theme={theme}>
+              <Stack.Navigator
+                initialRouteName="LanguageSelection"
+                screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} />
+              <Stack.Screen name="AcuityScreen" component={AcuityScreen} />
+              <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
+              <Stack.Screen name="TabNavigator" component={TabNavigator} />
+              <Stack.Screen name="DetailScreen" component={DetailScreen} />
+              <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </SettingsContextProvider>
+        </ThemeContext.Provider>  
       </PaperProvider>
    );
  }
