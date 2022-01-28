@@ -2,23 +2,22 @@ import React from 'react';
 
 // Declaring the state object globally.
 const currentLanguageState = {
-    currentLang: 'en',
+    currentLang_: 'en',
 };
   
 const settingsContextWrapper = (component?: React.Component) => ({
     ...currentLanguageState,
     changeLangToEn: () => {
-        currentLanguageState.currentLang = 'en'
+        currentLanguageState.currentLang_ = 'en'
         component?.setState({ context: settingsContextWrapper(component) });
     },
     changeLangToEs: () => {
-        currentLanguageState.currentLang = 'es'
+        currentLanguageState.currentLang_ = 'es'
         component?.setState({ context: settingsContextWrapper(component) });
     },
     changeLangToFr: () => {
-        currentLanguageState.currentLang = 'fr'
+        currentLanguageState.currentLang_ = 'fr'
         component?.setState({ context: settingsContextWrapper(component) });
-        console.log("sdfsdfsdf")
     },
 });
   

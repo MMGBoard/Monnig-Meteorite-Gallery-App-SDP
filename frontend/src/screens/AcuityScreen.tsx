@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { View, StyleSheet, Switch } from 'react-native';
 import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, TouchableRipple } from 'react-native-paper';
 import { ThemeContext } from '../components/ThemeContextProvider';
+import { SettingsContext } from '../components/SettingsContext';
 
 export default function AcuityScreen({navigation} : {navigation: any}) {
 
   const [flexDirection, setflexDirection] = useState("column");
   const [value, setValue] = React.useState('secondChoice');
- 
+  const { currentLang_ } = React.useContext(SettingsContext);
+
   return (
     <View>
       <View style={styles.backButton}>

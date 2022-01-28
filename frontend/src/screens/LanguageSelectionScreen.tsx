@@ -1,12 +1,13 @@
-import React, { Component, useEffect, useState } from 'react' ;
+import React, { Component, useContext, useEffect, useState } from 'react' ;
 import { Text, View, Button, StyleSheet, Alert} from 'react-native' ;
 import { RadioButton } from 'react-native-paper' ;
+import { observer } from 'mobx-react-lite';
 import  TranslateText  from '../components/TranslateText' ;
-import { ThemeContext } from '../components/ThemeContextProvider';
+// import { ThemeContext } from '../components/ThemeContextProvider';
 import { SettingsContext } from '../components/SettingsContext';
+import { useCurrentLangStore, CurrentLangStoreContext } from '../components/SettingContext'
 
-//const currentLang = React.useContext(SettingContext);
-const currentLang = 'en'
+
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -41,7 +42,9 @@ export async function translateRequest(value:string, target: string){
 };
 
 export function handleLangChange(checked:any,setChecked:any){
-    return (changeLangAlert(checked,setChecked),setChecked(currentLang))
+    const { currentLang_} = React.useContext(SettingsContext);
+
+    return (changeLangAlert(checked,setChecked),setChecked(currentLang_))
 }
 
 // This is a functional component that render's an alert when the user selects a language
@@ -60,12 +63,15 @@ const changeLangAlert = (checked:any,setChecked:any) =>
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     let [_checked, setChecked] = React.useState('en');
-    const { currentLang, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
+
+    const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
+
+    //const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = useCurrentLangStore();
 
     return (
         <View style={styles.container}>
             <Text style={styles.greeting}>
-                <TranslateText text="Welcome to TCU's Monnig Meteorite Gallery!" lang={currentLang}/>
+                <TranslateText text="Welcome to TCU's Monnig Meteorite Gallery!" lang={currentLang_}/>
             </Text>
             
             <Text style={styles.header}> 
@@ -86,7 +92,7 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                 </View>
             <View style={styles.continueButton}>
                 <Button title="Continue" color="#4D1979" onPress={() => changeLangToFr()}></Button>
-                <Button title="Continue" color="#4D1979" onPress={() => console.log("CLang: " + currentLang)}></Button>
+                <Button title="Continue" color="#4D1979" onPress={() => console.log("CLang: " + currentLang_)}></Button>
                 <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
             </View>
         </View>
