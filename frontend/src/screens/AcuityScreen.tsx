@@ -1,24 +1,26 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Switch } from 'react-native';
 import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, TouchableRipple } from 'react-native-paper';
-import { SettingContext } from '../components/SettingContextProvider';
+import  TranslateText  from '../components/TranslateText' ;
+import { SettingsContext } from '../components/SettingsContext'
 
 export default function AcuityScreen({navigation} : {navigation: any}) {
 
-  const [flexDirection, setflexDirection] = useState("column");
   const [value, setValue] = React.useState('secondChoice');
- 
+  const { currentLang_ } = React.useContext(SettingsContext);
+  
   return (
     <View>
       <View style={styles.backButton}>
         <PaperButton 
           icon="chevron-left" mode="contained"
           onPress={() => navigation.navigate('LanguageSelectionScreen')}
-        >Back</PaperButton>
+        ><TranslateText text="Back" lang={currentLang_}/>
+        </PaperButton>
         </View>
         <View style={styles.container}>
         <View style={styles.radioContainer}>
-        <PaperText style={styles.label}>Please select your prefered font-size:</PaperText>
+        <PaperText style={styles.label}><TranslateText text="Please select your prefered font-size:" lang={currentLang_}/></PaperText>
           <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
             <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
                 label="Welcome to TCU!" value="firstChoice" />
@@ -33,8 +35,8 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
         <View> 
           <View style={styles.nextButton}>  
             <PaperButton mode="contained"
-            onPress={() => navigation.navigate('ColorBlindnessScreen')}>
-            Next</PaperButton>
+            onPress={() => navigation.navigate('ColorBlindnessScreen')}><TranslateText text="Next" lang={currentLang_}/>
+            </PaperButton>
           </View>
       </View>   
     </View>

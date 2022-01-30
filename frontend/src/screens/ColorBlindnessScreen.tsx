@@ -3,7 +3,10 @@ import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Button as PaperButton, Text as PaperText, Switch, useTheme } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
-import { SettingContext } from '../components/SettingContextProvider';
+import { ThemeContext } from '../components/ThemeContextProvider';
+import  TranslateText  from '../components/TranslateText' ;
+import { SettingsContext } from '../components/SettingsContext'
+
 
 const colors = [
   { id: 1, txt: 'Red', isChecked: false },
@@ -15,7 +18,9 @@ const colors = [
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
   const [items, setItems] = useState(colors);
   const paperTheme = useTheme();
-  const {toggleTheme} = React.useContext(SettingContext);  
+  const {toggleTheme} = React.useContext(ThemeContext);  
+  const { currentLang_ } = React.useContext(SettingsContext);
+
   
   const handleChange = (id: number) => {
     let temp = items.map((color) => {
@@ -60,13 +65,14 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
           <PaperButton 
             icon="chevron-left" mode="contained"
             onPress={() => navigation.navigate('AcuityScreen')}
-          >Back</PaperButton>
+          ><TranslateText text="Back" lang={currentLang_}/>
+          </PaperButton>
         </View>
         
         <View style={styles.container}>
-          <PaperText style={styles.header}>Select colors you are not able to see:</PaperText>
+          <PaperText style={styles.header}><TranslateText text="Select colors you are not able to see:" lang={currentLang_}/></PaperText>
           <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
-          <PaperText style={styles.header}>Select your color blindness type:</PaperText>
+          <PaperText style={styles.header}><TranslateText text="Select your colorblindness type:" lang={currentLang_}/></PaperText>
             <RNPickerSelect 
                 placeholder={{ label: "Select your color blindness type", value: null }} 
                 onValueChange={(value) => console.log(value)}
@@ -79,7 +85,7 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
           <View style={styles.nextButton}>  
             <PaperButton mode="contained"
               onPress={() => navigation.navigate('TabNavigator')}
-            >Start tour!</PaperButton>
+            ><TranslateText text="Start tour!" lang={currentLang_}/></PaperButton>
         </View>
        </View>
       </View>

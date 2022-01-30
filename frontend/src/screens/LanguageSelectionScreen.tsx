@@ -1,7 +1,8 @@
-import React, { Component, useEffect, useState } from 'react' ;
+import React, { Component, useContext, useEffect, useState } from 'react' ;
 import { Text, View, Button, StyleSheet } from 'react-native' ;
-import { RadioButton } from 'react-native-paper' ;
+import {Button as PaperButton, RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
+import { SettingsContext } from '../components/SettingsContext'
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -35,36 +36,43 @@ export async function translateRequest(value:string, target: string){
     }
 };
 
+export function handleLangChange(checked:any,setChecked:any){
+
+    return (setChecked(checked))
+}
+
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
-    const [checked, setChecked] = React.useState('en');
+    let [_checked, setChecked] = React.useState('en');
+
+    const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
 
     return (
         <View style={styles.container}>
-                <Text style={styles.greeting}>
-                    <TranslateText text="Welcome to TCU's Monnig Meteorite Gallery!" lang="en"/>
-                </Text>
-                
-                <Text style={styles.header}> 
-                    <TranslateText text="Please select your language preference" lang="en"/>
-                </Text>
+            <Text style={styles.greeting}>
+                <TranslateText text="Welcome to TCU's Monnig Meteorite Gallery!" lang={currentLang_}/>
+            </Text>
+            
+            <Text style={styles.header}> 
+                <TranslateText text="Please select your language preference" lang={currentLang_}/>
+            </Text>
 
-                    <View style={{alignSelf: 'center', width: "35%"}}>
-                        <RadioButton.Group onValueChange={checked => setChecked(checked)} value={checked}>
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
-                            color="#4D1979" label="English" value="en" />
+                <View style={{alignSelf: 'center', width: "35%"}}>
+                    <RadioButton.Group  onValueChange={_checked => handleLangChange(_checked,setChecked)} value={_checked}>
+                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        color="#4D1979" label="English" value="en" />
 
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                            color="#4D1979" label="Spanish" value="es" />
-                            
-                            <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                            color="#4D1979" label="French" value="fr" />
-                        </RadioButton.Group>
-                    </View>
-                <View style={styles.continueButton}>
-                    <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
-                    {console.log("checked: ",checked)}
+                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
+                        color="#4D1979" label="Spanish" value="es" />
+                        
+                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
+                        color="#4D1979" label="French" value="fr" />
+                    </RadioButton.Group>
                 </View>
+            <View style={styles.continueButton}>
+                <PaperButton mode="contained" onPress={() => changeLangToFr()}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
+                <PaperButton mode="contained" onPress={() => navigation.navigate('AcuityScreen')}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
+            </View>
         </View>
     );
 }

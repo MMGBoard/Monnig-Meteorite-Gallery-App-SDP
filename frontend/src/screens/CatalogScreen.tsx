@@ -83,7 +83,7 @@ const onSubmitted = () => {
 // Render return
   return (
     <View>
-      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>
+      {/* <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/> */}
       <FlatList style={{ margin: 5 }}
         data={meteorites}
         numColumns={2}

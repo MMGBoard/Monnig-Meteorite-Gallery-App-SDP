@@ -1,5 +1,6 @@
 import { React, Component } from 'react';
 import { translateRequest } from '../screens/LanguageSelectionScreen';
+import equal from 'fast-deep-equal'
 
 class TranslateText extends Component {
     state = {
@@ -14,7 +15,13 @@ class TranslateText extends Component {
     }
 
     async componentDidMount(){
-        console.log(this.props.lang)
+        if(this.props.lang != 'en'){  // if target lang is 'en' => do not translate and just return string
+            await this.doTranslate()
+        }
+    }
+
+    async componentDidUpdate(prevProp){
+        if(!equal(this.props.lang, prevProp.lang))
         if(this.props.lang != 'en'){  // if target lang is 'en' => do not translate and just return string
             await this.doTranslate()
         }
