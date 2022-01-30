@@ -1,13 +1,8 @@
 import React, { Component, useContext, useEffect, useState } from 'react' ;
-import { Text, View, Button, StyleSheet, Alert} from 'react-native' ;
-import { RadioButton } from 'react-native-paper' ;
-import { observer } from 'mobx-react-lite';
+import { Text, View, Button, StyleSheet } from 'react-native' ;
+import {Button as PaperButton, RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
-// import { ThemeContext } from '../components/ThemeContextProvider';
-import { SettingsContext } from '../components/SettingsContext';
-import { useCurrentLangStore, CurrentLangStoreContext } from '../components/SettingContext'
-
-
+import { SettingsContext } from '../components/SettingsContext'
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -42,22 +37,8 @@ export async function translateRequest(value:string, target: string){
 };
 
 export function handleLangChange(checked:any,setChecked:any){
-    const { currentLang_} = React.useContext(SettingsContext);
 
-    return (changeLangAlert(checked,setChecked),setChecked(currentLang_))
-}
-
-// This is a functional component that render's an alert when the user selects a language
-const changeLangAlert = (checked:any,setChecked:any) =>
-{
-    Alert.alert(
-        "Warning!",
-        "You are about to translate your preferred language to "+checked,
-        [
-            { text: "Cancel", style: "cancel"},
-            { text: "OK", onPress: () => setChecked(checked)}
-        ]
-    )
+    return (setChecked(checked))
 }
 
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
@@ -66,8 +47,6 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
 
     const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
 
-    //const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = useCurrentLangStore();
-
     return (
         <View style={styles.container}>
             <Text style={styles.greeting}>
@@ -75,7 +54,7 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
             </Text>
             
             <Text style={styles.header}> 
-                <TranslateText text="Please select your language preference" lang="en"/>
+                <TranslateText text="Please select your language preference" lang={currentLang_}/>
             </Text>
 
                 <View style={{alignSelf: 'center', width: "35%"}}>
@@ -91,9 +70,8 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                     </RadioButton.Group>
                 </View>
             <View style={styles.continueButton}>
-                <Button title="Continue" color="#4D1979" onPress={() => changeLangToFr()}></Button>
-                <Button title="Continue" color="#4D1979" onPress={() => console.log("CLang: " + currentLang_)}></Button>
-                <Button title="Continue" color="#4D1979" onPress={() => navigation.navigate('AcuityScreen')}></Button>
+                <PaperButton mode="contained" onPress={() => changeLangToFr()}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
+                <PaperButton mode="contained" onPress={() => navigation.navigate('AcuityScreen')}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
             </View>
         </View>
     );

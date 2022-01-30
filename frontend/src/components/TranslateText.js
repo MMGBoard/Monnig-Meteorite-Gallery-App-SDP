@@ -21,7 +21,6 @@ class TranslateText extends Component {
     }
 
     async componentDidUpdate(prevProp){
-        console.log("prev prop value is: ",prevProp.lang)
         if(!equal(this.props.lang, prevProp.lang))
         if(this.props.lang != 'en'){  // if target lang is 'en' => do not translate and just return string
             await this.doTranslate()
