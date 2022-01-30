@@ -36,8 +36,21 @@ export async function translateRequest(value:string, target: string){
     }
 };
 
-export function handleLangChange(checked:any,setChecked:any){
+export function handleEngChange(checked:any,setChecked:any){
+    const { changeLangToEn } = React.useContext(SettingsContext);
+    changeLangToEn()
+    setChecked(checked)
+}
 
+export function handleEsChange(checked:any,setChecked:any){
+    const { changeLangToEs } = React.useContext(SettingsContext);
+    changeLangToEs
+    return (setChecked(checked))
+}
+
+export function handleFrChange(checked:any,setChecked:any){
+    const { changeLangToFr } = React.useContext(SettingsContext);
+    changeLangToFr
     return (setChecked(checked))
 }
 
@@ -45,7 +58,7 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     let [_checked, setChecked] = React.useState('en');
 
-    const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
+    const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr} = React.useContext(SettingsContext);
 
     return (
         <View style={styles.container}>
@@ -58,19 +71,26 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
             </Text>
 
                 <View style={{alignSelf: 'center', width: "35%"}}>
-                    <RadioButton.Group  onValueChange={_checked => handleLangChange(_checked,setChecked)} value={_checked}>
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
-                        color="#4D1979" label="English" value="en" />
-
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                        color="#4D1979" label="Spanish" value="es" />
-                        
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                        color="#4D1979" label="French" value="fr" />
-                    </RadioButton.Group>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="en" color="#4D1979" label="English" status={ _checked === 'en' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            changeLangToEn()
+                            setChecked('en')
+                        }}/>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="es" color="#4D1979" label="Spanish" status={ _checked === 'es' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            changeLangToEs()
+                            setChecked('es')
+                        }}/>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="fr" color="#4D1979" label="French" status={ _checked === 'fr' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            changeLangToFr()
+                            setChecked('fr')
+                        }}/>
                 </View>
             <View style={styles.continueButton}>
-                <PaperButton mode="contained" onPress={() => changeLangToFr()}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
                 <PaperButton mode="contained" onPress={() => navigation.navigate('AcuityScreen')}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
             </View>
         </View>
