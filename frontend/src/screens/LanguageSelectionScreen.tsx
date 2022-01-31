@@ -2,7 +2,7 @@ import React, { Component, useContext, useEffect, useState } from 'react' ;
 import { Text, View, Button, StyleSheet } from 'react-native' ;
 import {Button as PaperButton, RadioButton } from 'react-native-paper' ;
 import  TranslateText  from '../components/TranslateText' ;
-import { SettingsContext } from '../components/SettingsContext'
+import { SettingsContext } from '../components/SettingsContext' ;
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
