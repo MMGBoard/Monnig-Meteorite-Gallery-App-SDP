@@ -6,7 +6,7 @@ import { useRoute } from '@react-navigation/native'
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
-    const route = useRoute();
+    const route = useRoute<any>();
 
     return (
         <View>
