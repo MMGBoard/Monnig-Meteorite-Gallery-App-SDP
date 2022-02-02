@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, Switch } from 'react-native';
+import i18n from 'i18n-js' ;
+import { en, es, fr } from '../i18n/supportedLanguages' ;
 import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, TouchableRipple } from 'react-native-paper';
-import  TranslateText  from '../components/TranslateText' ;
 import { SettingsContext } from '../components/SettingsContext'
 
 export default function AcuityScreen({navigation} : {navigation: any}) {
@@ -15,27 +16,27 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
         <PaperButton 
           icon="chevron-left" mode="contained"
           onPress={() => navigation.navigate('LanguageSelectionScreen')}
-        ><TranslateText text="Back" lang={currentLang_}/>
+        >{i18n.t('back')}
         </PaperButton>
         </View>
         <View style={styles.container}>
         <View style={styles.radioContainer}>
-        <PaperText style={styles.label}><TranslateText text="Please select your prefered font-size:" lang={currentLang_}/></PaperText>
+        <PaperText style={styles.label}>{i18n.t('selectFont')}</PaperText>
           <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
             <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="firstChoice" />
+                label={i18n.t('welcomeTCU')} value="firstChoice" />
             <RadioButton.Item labelStyle={{fontSize: 24, fontFamily: 'ROBOTO'}} 
-                label="Welcome to TCU!" value="secondChoice" />
+                label={i18n.t('welcomeTCU')} value="secondChoice" />
             <RadioButton.Item labelStyle={{fontSize: 36, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="thirdChoice" />
+                label={i18n.t('welcomeTCU')} value="thirdChoice" />
             <RadioButton.Item labelStyle={{fontSize: 48, fontFamily: 'ROBOTO'}}
-                label="Welcome to TCU!" value="fourthChoice" />
+                label={i18n.t('welcomeTCU')} value="fourthChoice" />
           </RadioButton.Group>
         </View></View>
         <View> 
           <View style={styles.nextButton}>  
             <PaperButton mode="contained"
-            onPress={() => navigation.navigate('ColorBlindnessScreen')}><TranslateText text="Next" lang={currentLang_}/>
+            onPress={() => navigation.navigate('ColorBlindnessScreen')}>{i18n.t('next')}
             </PaperButton>
           </View>
       </View>   
