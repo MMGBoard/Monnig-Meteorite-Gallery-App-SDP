@@ -3,15 +3,16 @@ import { Text, View, StyleSheet, FlatList } from 'react-native';
 import { Button as PaperButton, Text as PaperText, Switch, useTheme } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
-import i18n from 'i18n-js' ;
 import { ThemeContext } from '../components/ThemeContextProvider';
+import  TranslateText  from '../components/TranslateText' ;
 import { SettingsContext } from '../components/SettingsContext'
 
+
 const colors = [
-  { id: 1, txt: "Red", isChecked: false },
-  { id: 2, txt: "Green", isChecked: false },
-  { id: 3, txt: "Blue", isChecked: false },
-  { id: 4, txt: "Dark Blue", isChecked: false },
+  { id: 1, txt: 'Red', isChecked: false },
+  { id: 2, txt: 'Green', isChecked: false },
+  { id: 3, txt: 'Blue', isChecked: false },
+  { id: 4, txt: 'Dark blue', isChecked: false },
 ];
 
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
@@ -64,16 +65,16 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
           <PaperButton 
             icon="chevron-left" mode="contained"
             onPress={() => navigation.navigate('AcuityScreen')}
-          >{i18n.t('back')}
+          ><TranslateText text="Back" lang={currentLang_}/>
           </PaperButton>
         </View>
         
         <View style={styles.container}>
-          <PaperText style={styles.header}>{i18n.t('selectColors')}</PaperText>
+          <PaperText style={styles.header}><TranslateText text="Select colors you are not able to see:" lang={currentLang_}/></PaperText>
           <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
-          <PaperText style={styles.header}>{i18n.t('selectBlind')}</PaperText>
+          <PaperText style={styles.header}><TranslateText text="Select your colorblindness type:" lang={currentLang_}/></PaperText>
             <RNPickerSelect 
-                placeholder={{ label: i18n.t('selectBlind'), value: null }} 
+                placeholder={{ label: "Select your color blindness type", value: null }} 
                 onValueChange={(value) => console.log(value)}
                 items={[
                     { label: 'Deuteranomaly', value: 'deuteranomaly' },
@@ -84,7 +85,7 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
           <View style={styles.nextButton}>  
             <PaperButton mode="contained"
               onPress={() => navigation.navigate('TabNavigator')}
-            >{i18n.t('startTour')}</PaperButton>
+            ><TranslateText text="Start tour!" lang={currentLang_}/></PaperButton>
         </View>
        </View>
       </View>

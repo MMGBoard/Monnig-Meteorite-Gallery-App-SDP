@@ -4,33 +4,34 @@ import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText
 import SelectDropdown from 'react-native-select-dropdown'
 import Slider from '@react-native-community/slider';
 import { ThemeContext } from '../components/ThemeContextProvider';
-import i18n from 'i18n-js' ;
+
+import  TranslateText  from '../components/TranslateText' ;
 import { SettingsContext } from '../components/SettingsContext'
 
 export default function SettingsScreen({navigation} : {navigation: any}) {
-    const blindnessTypes = ["Deuteranomaly", "Protanomaly", "Protanopia"]
+    const languages = ["English", "Spanish", "French"]
     const visiontype = ["Blurred Vision", "Type 1", "Type 2", "Type 3"]
     const [brightnessValue, setbrightnessValue] = useState(15);
     const [fontSizeValue, setfontSizeValue] = useState(15);
+    const [value, setValue] = React.useState('first');
     const paperTheme = useTheme();
     const {toggleTheme} = React.useContext(ThemeContext);  
+
     const { currentLang_ } = React.useContext(SettingsContext);
-    
-    let [value, setValue] = React.useState(currentLang_);
 
     return (
       <>
         <View style={{width: "100%", flexDirection: "row", justifyContent: "flex-start", paddingTop: "5%"}}>
-          <PaperText style={styles.midlabel}>{i18n.t('darkMode')}</PaperText>
+          <PaperText style={styles.midlabel}><TranslateText text="Dark Mode: " lang={currentLang_}/></PaperText>
           <Switch style={{marginTop: 20}} value={paperTheme.dark} onValueChange={toggleTheme}/>
         </View>
 
         <PaperDivider/>
 
         <View style={styles.topcontainer}>
-          <PaperText style={styles.toplabel}>{i18n.t('colorbType')}</PaperText>
+          <PaperText style={styles.toplabel}><TranslateText text="Language Preference: " lang={currentLang_}/></PaperText>
           <SelectDropdown
-              data={blindnessTypes}
+              data={languages}
               onSelect={(selectedItem, index) => {
               console.log(selectedItem, index)
             }}
@@ -46,7 +47,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <PaperText style={styles.label}>  {i18n.t('brightness')}</PaperText>
+          <PaperText style={styles.label}>  <TranslateText text="Brightness: " lang={currentLang_}/></PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
             maximumValue={100}
@@ -63,7 +64,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <PaperText style={styles.label}>{i18n.t('fontSize')}  </PaperText>
+          <PaperText style={styles.label}><TranslateText text="Font Size: " lang={currentLang_}/>  </PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
             maximumValue={30}
@@ -82,40 +83,19 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         
         
         <PaperDivider/>
-        <PaperText style={styles.midlabel}>{i18n.t('langPref')}</PaperText>
+        <PaperText style={styles.midlabel}><TranslateText text="Color Blindness Type:" lang={currentLang_}/></PaperText>
         <View style={styles.radioContainer}>
-          {/* <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+          <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
               <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                color="#4D1979" label="Deuteranomaly" value="en" />
+                color="#4D1979" label="Deuteranomaly" value="firstChoice" />
              <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
                 color="#4D1979" label="Protanomaly" value="secondChoice" />   
               <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
                 color="#4D1979" label="Protanopia" value="thirdChoice" />
-          </RadioButton.Group> */}
-
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="English" status={ value === 'en' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'en'
-                            setValue('en')
-                        }}/>
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="Spanish" status={ value === 'es' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'es'
-                            setValue('es')
-                        }}/>
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="French" status={ value === 'fr' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'fr'
-                            setValue('fr')
-                        }}/>
-
-
+          </RadioButton.Group>
           <PaperDivider/>
           <View style={styles.container}>
-            <PaperText style={styles.label}>{i18n.t('visualimpType')}  </PaperText>
+            <PaperText style={styles.label}><TranslateText text="Visual Impairment Type:" lang={currentLang_}/>  </PaperText>
             <SelectDropdown
               data={visiontype}
               onSelect={(selectedItem, index) => {
@@ -139,7 +119,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           <PaperButton 
               mode="contained" color="#DD1223"
               onPress={() => navigation.navigate('LanguageSelectionScreen')}>
-              <PaperText style={{color: "white"}}>{i18n.t('resetSettings')}</PaperText>
+              <PaperText style={{color: "white"}}><TranslateText text="Reset Settings" lang={currentLang_}/></PaperText>
           </PaperButton>
         </View>
         <PaperText style={styles.label}>{'\u00A9'} MMG App</PaperText>
