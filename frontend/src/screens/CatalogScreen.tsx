@@ -3,15 +3,17 @@ import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, 
 import firestore from '@react-native-firebase/firestore';
 import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Picker } from '@react-native-picker/picker';
 
-export default function CatalogScreen({navigation} : {navigation: any}, {route} : {route: any}) {
+export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
-
   const [searchQuery, setSearchQuery] = React.useState(''); // Initial component state setting 
+  const [selectedValue, setSelectedValue] = useState("METEORITE_");
   const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query); // Method to setSearchQuery to what is written in bar
 
   const detailsStack = createNativeStackNavigator();
+
 
   // Component to read data from Firestore database and initializes meteors array.
   useEffect(() => {
@@ -45,7 +47,7 @@ const onSubmitted = () => {
     console.log("Search query: ", searchQuery);
     firestore()
     .collection('meteorites')
-    .where('METEORITE_', 'in', [searchQuery])
+    .where(selectedValue, 'in', [searchQuery])
     .get()
     .then(querySnapshot => {
       const meteors: React.SetStateAction<any[]> =  []
@@ -83,7 +85,19 @@ const onSubmitted = () => {
 // Render return
   return (
     <View>
-      {/* <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/> */}
+      <View style={styles.container}>
+        <Picker style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 1}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
+          <Picker.Item style={{fontSize: 20}}label="Name" value="METEORITE_" />
+          <Picker.Item style={{fontSize: 20}}label="Catalog No." value="CATALOG" />
+          <Picker.Item style={{fontSize: 20}}label="Category" value="CATEGORY" />
+          <Picker.Item style={{fontSize: 20}}label="Class" value="CLASS" />
+          <Picker.Item style={{fontSize: 20}}label="Year" value="DATE_FOUND" />
+          <Picker.Item style={{fontSize: 20}}label="Group" value="GROUP" />
+          <Picker.Item style={{fontSize: 20}}label="Location" value="LOCATION" />
+        </Picker>
+        <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>
+      </View>
+     
       <FlatList style={{ margin: 5 }}
         data={meteorites}
         numColumns={2}
@@ -104,3 +118,12 @@ const onSubmitted = () => {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: 30,
+    paddingTop: 10,
+    flexDirection: 'row'
+  }
+});
