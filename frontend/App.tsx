@@ -17,6 +17,7 @@
  import { ThemeContext } from './src/components/ThemeContextProvider';
  import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
+ import i18n from 'i18n-js' ;
  
  import {
    AcuityScreen,
@@ -34,9 +35,9 @@
   const dark = useTheme().dark;
    return (
      <TopTab.Navigator>
-       <TopTab.Screen name="Tour Assitance" component={AssistanceScreen} />
-       <TopTab.Screen name="Meteorite Catalog" component={CatalogScreen} />
-       <TopTab.Screen name="Settings" component={SettingsScreen} />
+       <TopTab.Screen name={i18n.t('tourAssist')} component={AssistanceScreen} />
+       <TopTab.Screen name={i18n.t('meteoriteCat')} component={CatalogScreen} />
+       <TopTab.Screen name={i18n.t('settings')} component={SettingsScreen} />
      </TopTab.Navigator>
    );
  }
