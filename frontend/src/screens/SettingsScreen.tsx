@@ -5,6 +5,9 @@ import SelectDropdown from 'react-native-select-dropdown'
 import Slider from '@react-native-community/slider';
 import { ThemeContext } from '../components/ThemeContextProvider';
 
+import  TranslateText  from '../components/TranslateText' ;
+import { SettingsContext } from '../components/SettingsContext'
+
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const languages = ["English", "Spanish", "French"]
     const visiontype = ["Blurred Vision", "Type 1", "Type 2", "Type 3"]
@@ -14,17 +17,19 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
     const paperTheme = useTheme();
     const {toggleTheme} = React.useContext(ThemeContext);  
 
+    const { currentLang_ } = React.useContext(SettingsContext);
+
     return (
       <>
         <View style={{width: "100%", flexDirection: "row", justifyContent: "flex-start", paddingTop: "5%"}}>
-          <PaperText style={styles.midlabel}>Dark Mode:</PaperText>
+          <PaperText style={styles.midlabel}><TranslateText text="Dark Mode: " lang={currentLang_}/></PaperText>
           <Switch style={{marginTop: 20}} value={paperTheme.dark} onValueChange={toggleTheme}/>
         </View>
 
         <PaperDivider/>
 
         <View style={styles.topcontainer}>
-          <PaperText style={styles.toplabel}>Language Preference:</PaperText>
+          <PaperText style={styles.toplabel}><TranslateText text="Language Preference: " lang={currentLang_}/></PaperText>
           <SelectDropdown
               data={languages}
               onSelect={(selectedItem, index) => {
@@ -42,7 +47,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <PaperText style={styles.label}>  Brightness:</PaperText>
+          <PaperText style={styles.label}>  <TranslateText text="Brightness: " lang={currentLang_}/></PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
             maximumValue={100}
@@ -59,11 +64,11 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         </View>
         <PaperDivider/>
         <View style={styles.container}>
-          <PaperText style={styles.label}>Font Size:  </PaperText>
+          <PaperText style={styles.label}><TranslateText text="Font Size: " lang={currentLang_}/>  </PaperText>
           <Slider
             style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-            maximumValue={48}
-            minimumValue={12}
+            maximumValue={30}
+            minimumValue={10}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
             step={1}
@@ -78,7 +83,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         
         
         <PaperDivider/>
-        <PaperText style={styles.midlabel}>Color Blindness Type:</PaperText>
+        <PaperText style={styles.midlabel}><TranslateText text="Color Blindness Type:" lang={currentLang_}/></PaperText>
         <View style={styles.radioContainer}>
           <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
               <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
@@ -90,7 +95,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           </RadioButton.Group>
           <PaperDivider/>
           <View style={styles.container}>
-            <PaperText style={styles.label}>Visual Impairment Type:  </PaperText>
+            <PaperText style={styles.label}><TranslateText text="Visual Impairment Type:" lang={currentLang_}/>  </PaperText>
             <SelectDropdown
               data={visiontype}
               onSelect={(selectedItem, index) => {
@@ -114,7 +119,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           <PaperButton 
               mode="contained" color="#DD1223"
               onPress={() => navigation.navigate('LanguageSelectionScreen')}>
-              <PaperText style={{color: "white"}}>Reset Settings</PaperText>
+              <PaperText style={{color: "white"}}><TranslateText text="Reset Settings" lang={currentLang_}/></PaperText>
           </PaperButton>
         </View>
         <PaperText style={styles.label}>{'\u00A9'} MMG App</PaperText>
