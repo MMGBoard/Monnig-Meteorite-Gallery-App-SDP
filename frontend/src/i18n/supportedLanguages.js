@@ -31,7 +31,19 @@ const en = {
     // static data ...
 
     // CatalogScreen.tsx
-    // static data ...abs
+    view: 'View',
+    name: 'Name',
+    catalogNo: 'Catalog No.',
+    category: 'Category',
+    class: 'Class',
+    year: 'Year',
+    group: 'Group',
+    location: 'Location',
+    search: 'Search',
+
+    // DetailScreen.tsx
+    play: 'Play',
+    stop: 'Stop',
 
     // Settings.tsx
     darkMode: 'Dark Mode: ',
@@ -77,7 +89,19 @@ const es = {
     // static data ...
 
     // CatalogScreen.tsx
-    // static data ...abs
+    view: 'Vista',
+    name: 'Nombre',
+    catalogNo: 'Numero de catalogo',
+    category: 'Categoría',
+    class: 'Clase',
+    year: 'Año',
+    group: 'Grupo',
+    location: 'Ubicación',
+    search: 'Búsqueda',
+
+    // DetailScreen.tsx
+    play: 'Detener',
+    stop: 'Tocar',
 
     // Settings.tsx
     darkMode: 'Modo oscuro:',
@@ -94,10 +118,10 @@ const fr = {
     // App.tsx
     tourAssist: 'Assistance aux visites',
     meteoriteCat: 'Catalogue de météorites',
-    settings: 'SettiRéglagesngs',
+    settings: 'Réglages',
 
     // LanguageSelectionScreen.tsx 
-    welcomeMonnig: "Bienvenue dans la galerie Monnig Meteorite de TCU !",
+    welcomeMonnig: "Bienvenue dans la galerie Monnig Meteorite de TCU!",
     selectLang: 'Veuillez sélectionner votre langue de préférence',
     english: 'Anglais',
     spanish: 'Espagnol',
@@ -107,7 +131,7 @@ const fr = {
     // AcuityScreen.tsx
     back: 'Retour',
     selectFont: 'Veuillez sélectionner votre taille de police préférée :',
-    welcomeTCU: 'Bienvenue au CCU !',
+    welcomeTCU: 'Bienvenue au TCU!',
     next: 'Suivant',
 
     // ColorBlindnessScreen.tsx
@@ -123,7 +147,19 @@ const fr = {
     // static data ...
 
     // CatalogScreen.tsx
-    // static data ...abs
+    view: 'Voir',
+    name: 'Nom',
+    catalogNo: 'numéro de catalogue',
+    category: 'Catégorie',
+    class: 'Classer',
+    year: 'An',
+    group: 'Grouper',
+    location: 'Emplacement',
+    search: 'Chercher',
+
+    // DetailScreen.tsx
+    play: 'Jouer',
+    stop: 'Arrêter',
 
     // Settings.tsx
     darkMode: 'Mode sombre: ',

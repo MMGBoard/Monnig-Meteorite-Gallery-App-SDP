@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import { Text, View, StyleSheet } from 'react-native';
-import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown'
-import Slider from '@react-native-community/slider';
-import { ThemeContext } from '../components/ThemeContextProvider';
+import { Text, View, StyleSheet } from 'react-native' ;
+import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper' ;
+import SelectDropdown from 'react-native-select-dropdown' ;
+import Slider from '@react-native-community/slider' ;
+import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
-import { SettingsContext } from '../components/SettingsContext'
+import { SettingsContext } from '../components/SettingsContext' ;
 
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const blindnessTypes = ["Deuteranomaly", "Protanomaly", "Protanopia"]
