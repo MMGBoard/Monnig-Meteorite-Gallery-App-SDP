@@ -1,12 +1,122 @@
-import React from 'react'
-import { Text, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react'
+import { FlatList, Text, View, Image, StyleSheet } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export default function AssistanceScreen({navigation} : {navigation: any}) {
-  let imagePath = require("../../images/TourAssistanceScreenshot.png");
+  const [loading, setLoading] = useState(true); // Set loading to true on component mount
+  const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
 
+  const [searchQuery, setSearchQuery] = React.useState(''); // Initial component state setting 
+  const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query); // Method to setSearchQuery to what is written in bar
+
+  const detailsStack = createNativeStackNavigator();
+  let imagePath = require("../../images/TourAssistanceScreenshotCropped.png");
+  
+  // Component to read data from Firestore database and initializes meteors array.
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('meteorites')
+      .onSnapshot(querySnapshot => {
+        const meteors: React.SetStateAction<any[]> =  []
+  
+        querySnapshot.forEach(documentSnapshot => {
+          meteors.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+  
+        setMeteorites(meteors);
+        setLoading(false);
+      });
+  
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
+  }, []);
+
+// Set screen to loading if still fetching data
+  if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Image source={imagePath} resizeMode="cover" style={{width: "101%", height: "102%"}} />
-      </View>
-    );
+    <View style={styles.activityLoaderContainer}>
+      <ActivityIndicator size="large"/>
+    </View>);
+  }
+
+const onSubmitted = () => {
+  if (searchQuery != ""){
+    console.log("Search query: ", searchQuery);
+    firestore()
+    .collection('meteorites')
+    .where('METEORITE_', 'in', [searchQuery])
+    .get()
+    .then(querySnapshot => {
+      const meteors: React.SetStateAction<any[]> =  []
+
+      querySnapshot.forEach(documentSnapshot => {
+        meteors.push({
+          ...documentSnapshot.data(),
+          key: documentSnapshot.id,
+        });
+      });
+
+      setMeteorites(meteors);
+      setLoading(false);
+    });
+  }
+  if (searchQuery == ""){
+    firestore()
+      .collection('meteorites')
+      .onSnapshot(querySnapshot => {
+        const meteors: React.SetStateAction<any[]> =  []
+  
+        querySnapshot.forEach(documentSnapshot => {
+          meteors.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+  
+        setMeteorites(meteors);
+        setLoading(false);
+      });
+  }
 }
+
+// Render return
+  return (
+    <View style={styles.mainContainer}>
+      <Image source={imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
+      <FlatList style={{ margin: 5 }}
+        data={meteorites}
+        horizontal={true}
+        renderItem={({ item }) => (
+          <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
+            <Card>
+              <Card.Cover source={{ uri: item.PICTURES}} resizeMode='cover'/>
+              <Card.Title title={item.METEORITE_} subtitle={item.CATALOG} />
+              <Card.Content>
+                <Paragraph>{item.LOCATION}</Paragraph>
+              </Card.Content>
+              <Card.Actions>
+                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>View</Button>
+              </Card.Actions>
+            </Card>
+          </View>
+        )} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: "column",
+    flex: 1,
+    padding: 5,
+  },
+  activityLoaderContainer: {
+    flex: 1,
+    justifyContent: "center"
+  },
+});

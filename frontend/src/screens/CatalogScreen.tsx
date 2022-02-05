@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
+import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export default function CatalogScreen({navigation} : {navigation: any}, {route} : {route: any}) {
@@ -37,7 +37,10 @@ export default function CatalogScreen({navigation} : {navigation: any}, {route} 
 
 // Set screen to loading if still fetching data
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+    <View style={styles.activityLoaderContainer}>
+      <ActivityIndicator size="large"/>
+    </View>);
   }
 
 const onSubmitted = () => {
@@ -104,3 +107,10 @@ const onSubmitted = () => {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  activityLoaderContainer: {
+    flex: 1,
+    justifyContent: "center"
+  },
+});

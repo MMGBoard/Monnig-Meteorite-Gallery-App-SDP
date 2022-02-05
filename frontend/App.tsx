@@ -45,11 +45,12 @@
   const [isDarkTheme, setDarkTheme] = React.useState(false);
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-  const themeContext = {
+
+  const themeContext = React.useMemo(() => ({
     toggleTheme: () => {
       setDarkTheme( isDarkTheme => !isDarkTheme );
-    },
-  }
+    }
+  }), []);
 
 
    return (
