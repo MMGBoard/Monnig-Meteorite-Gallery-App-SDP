@@ -3,6 +3,7 @@ import { Text, View, StyleSheet } from 'react-native' ;
 import { Switch, useTheme, RadioButton, Button as PaperButton, Text as PaperText, Divider as PaperDivider } from 'react-native-paper' ;
 import SelectDropdown from 'react-native-select-dropdown' ;
 import Slider from '@react-native-community/slider' ;
+import SystemSetting from 'react-native-system-setting-ts' ;
 import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
 import { SettingsContext } from '../components/SettingsContext' ;
@@ -14,7 +15,7 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
     const [fontSizeValue, setfontSizeValue] = useState(15);
     const paperTheme = useTheme();
     const {toggleTheme} = React.useContext(ThemeContext);  
-    const { currentLang_ } = React.useContext(SettingsContext);
+    const { currentLang_, currentFontSize_ } = React.useContext(SettingsContext);
     
     let [value, setValue] = React.useState(currentLang_);
 
@@ -58,6 +59,9 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
             onValueChange={
               (sliderValue) => setbrightnessValue(sliderValue)
             }
+            onSlidingComplete={
+              () => {SystemSetting.setAppBrightness(brightnessValue/100)}
+            }
           />
           <PaperText style={styles.label}>{brightnessValue}%</PaperText>
         </View>
@@ -84,33 +88,24 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
         <PaperDivider/>
         <PaperText style={styles.midlabel}>{i18n.t('langPref')}</PaperText>
         <View style={styles.radioContainer}>
-          {/* <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
-              <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                color="#4D1979" label="Deuteranomaly" value="en" />
-             <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                color="#4D1979" label="Protanomaly" value="secondChoice" />   
-              <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                color="#4D1979" label="Protanopia" value="thirdChoice" />
-          </RadioButton.Group> */}
-
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="English" status={ value === 'en' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'en'
-                            setValue('en')
-                        }}/>
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="Spanish" status={ value === 'es' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'es'
-                            setValue('es')
-                        }}/>
-                    <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
-                        value={value} color="#4D1979" label="French" status={ value === 'fr' ? 'checked' : 'unchecked'} onPress={() => 
-                        {
-                            i18n.locale = 'fr'
-                            setValue('fr')
-                        }}/>
+          <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
+              value={value} color="#4D1979" label="English" status={ value === 'en' ? 'checked' : 'unchecked'} onPress={() => 
+              {
+                  i18n.locale = 'en'
+                  setValue('en')
+              }}/>
+          <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
+              value={value} color="#4D1979" label="Spanish" status={ value === 'es' ? 'checked' : 'unchecked'} onPress={() => 
+              {
+                  i18n.locale = 'es'
+                  setValue('es')
+              }}/>
+          <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
+              value={value} color="#4D1979" label="French" status={ value === 'fr' ? 'checked' : 'unchecked'} onPress={() => 
+              {
+                  i18n.locale = 'fr'
+                  setValue('fr')
+              }}/>
 
 
           <PaperDivider/>
