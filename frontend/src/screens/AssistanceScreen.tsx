@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { FlatList, Text, View, Image, StyleSheet } from 'react-native';
+import { FlatList, Text, View, Image, StyleSheet,
+  Alert,
+  DeviceEventEmitter,
+  NativeEventEmitter,
+  Platform,
+  PermissionsAndroid,
+  SafeAreaView,
+  StatusBar } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
+import { Button as PaperButton, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export default function AssistanceScreen({navigation} : {navigation: any}) {
@@ -14,8 +21,8 @@ export default function AssistanceScreen({navigation} : {navigation: any}) {
   const detailsStack = createNativeStackNavigator();
   let imagePath = require("../../images/TourAssistanceScreenshotCropped.png");
   
-  // Component to read data from Firestore database and initializes meteors array.
   useEffect(() => {
+    //lookForBeacons()
     const subscriber = firestore()
       .collection('meteorites')
       .onSnapshot(querySnapshot => {
@@ -37,57 +44,53 @@ export default function AssistanceScreen({navigation} : {navigation: any}) {
   }, []);
 
 // Set screen to loading if still fetching data
-  if (loading) {
-    return (
-    <View style={styles.activityLoaderContainer}>
-      <ActivityIndicator size="large"/>
-    </View>);
-  }
 
-const onSubmitted = () => {
-  if (searchQuery != ""){
-    console.log("Search query: ", searchQuery);
-    firestore()
-    .collection('meteorites')
-    .where('METEORITE_', 'in', [searchQuery])
-    .get()
-    .then(querySnapshot => {
-      const meteors: React.SetStateAction<any[]> =  []
 
-      querySnapshot.forEach(documentSnapshot => {
-        meteors.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
+const displayUpdate = (displayName: string) => {
+  setLoading(true);
+  firestore()
+  .collection('meteorites')
+  .where('DISPLAY_NAME', 'in', [displayName])
+  .get()
+  .then(querySnapshot => {
+    const meteors: React.SetStateAction<any[]> =  []
+
+    querySnapshot.forEach(documentSnapshot => {
+      meteors.push({
+        ...documentSnapshot.data(),
+        key: documentSnapshot.id,
       });
-
-      setMeteorites(meteors);
-      setLoading(false);
     });
-  }
-  if (searchQuery == ""){
-    firestore()
-      .collection('meteorites')
-      .onSnapshot(querySnapshot => {
-        const meteors: React.SetStateAction<any[]> =  []
-  
-        querySnapshot.forEach(documentSnapshot => {
-          meteors.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-          });
-        });
-  
-        setMeteorites(meteors);
-        setLoading(false);
-      });
-  }
+
+    setMeteorites(meteors);
+    setLoading(false);
+});
 }
+  
+
 
 // Render return
   return (
     <View style={styles.mainContainer}>
       <Image source={imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
+      <View style={styles.testButtons}>
+      <PaperButton mode="contained" onPress={() => navigation.navigate('BleTest')}>
+       Display 1</PaperButton>
+      <PaperButton mode="contained" onPress={() => displayUpdate('Texas')}>
+       Display 2</PaperButton>
+      <PaperButton mode="contained" onPress={() => displayUpdate('Mexico')}>
+       Display 3</PaperButton>
+       <PaperButton mode="contained" onPress={() => displayUpdate('test4')}>
+       Display 4</PaperButton>
+       
+      </View>
+      { loading &&
+        <View style={styles.activityLoaderContainer}>
+          <ActivityIndicator size="large"/>
+        </View>
+      } 
+
+      { !loading &&
       <FlatList style={{ margin: 5 }}
         data={meteorites}
         horizontal={true}
@@ -100,11 +103,24 @@ const onSubmitted = () => {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>View</Button>
+                <PaperButton onPress={() => navigation.navigate('DetailScreen' , item)}>View</PaperButton>
               </Card.Actions>
             </Card>
           </View>
         )} />
+      }
+                <View style={styles.buttonContainer}>
+                    <PaperButton 
+                        icon="play-circle" mode="contained"
+                        //Make button change to pause-circle when pressed
+                        //onPress={() => }
+                        >Play</PaperButton>
+                    <PaperButton 
+                        icon="stop-circle" mode="contained"
+                        //Make button change to pause when pressed
+                        //onPress={() => ()}
+                        >Stop</PaperButton>
+                </View>      
     </View>
   );
 }
@@ -118,5 +134,27 @@ const styles = StyleSheet.create({
   activityLoaderContainer: {
     flex: 1,
     justifyContent: "center"
+  },
+  testButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  pauseButton: {
+      marginTop: 30,
+      marginLeft: 30,
+      alignSelf: 'flex-start',
+      justifyContent: 'center'
+  },
+  playButton: {
+      alignSelf: 'flex-start',
+      justifyContent: 'center'
+  },
+  buttonContainer: {
+      alignContent: 'flex-start',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginLeft: 100,
+      marginRight: 100,
+      marginTop: 50
   },
 });

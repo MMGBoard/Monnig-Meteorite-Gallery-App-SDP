@@ -3,15 +3,19 @@ import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyl
 import firestore from '@react-native-firebase/firestore';
 import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Picker } from '@react-native-picker/picker';
+import i18n from 'i18n-js' ;
 
-export default function CatalogScreen({navigation} : {navigation: any}, {route} : {route: any}) {
+
+export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
-
   const [searchQuery, setSearchQuery] = React.useState(''); // Initial component state setting 
+  const [selectedValue, setSelectedValue] = useState("METEORITE_");
   const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query); // Method to setSearchQuery to what is written in bar
 
   const detailsStack = createNativeStackNavigator();
+
 
   // Component to read data from Firestore database and initializes meteors array.
   useEffect(() => {
@@ -48,7 +52,7 @@ const onSubmitted = () => {
     console.log("Search query: ", searchQuery);
     firestore()
     .collection('meteorites')
-    .where('METEORITE_', 'in', [searchQuery])
+    .where(selectedValue, 'in', [searchQuery])
     .get()
     .then(querySnapshot => {
       const meteors: React.SetStateAction<any[]> =  []
@@ -86,7 +90,19 @@ const onSubmitted = () => {
 // Render return
   return (
     <View>
-      {/* <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/> */}
+      <View style={styles.container}>
+        <Picker style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 1}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('catalogNo')} value="CATALOG" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('category')} value="CATEGORY" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" />
+        </Picker>
+       {/**  <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder={i18n.t('search')} onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>*/}
+      </View>
+     
       <FlatList style={{ margin: 5 }}
         data={meteorites}
         numColumns={2}
@@ -99,7 +115,7 @@ const onSubmitted = () => {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>View</Button>
+                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>{i18n.t('view')}</Button>
               </Card.Actions>
             </Card>
           </View>
@@ -113,4 +129,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center"
   },
+  container: {
+    flex: 1,
+    paddingBottom: 30,
+    paddingTop: 10,
+    flexDirection: 'row'
+  }
 });

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText } from 'react-native-paper';
+import { useRoute } from '@react-navigation/native'
+import i18n from 'i18n-js' ;
+import TranslateText from '../components/TranslateText'
 
-export default function DetailScreen({navigation} : {navigation: any}, {route} : {route: any}) { //Add Params for passing card
+
+export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
-  
+    const route = useRoute<any>();
 
     return (
         <View>
@@ -13,17 +16,17 @@ export default function DetailScreen({navigation} : {navigation: any}, {route} :
                 <PaperButton 
                     icon="chevron-left" mode="contained"
                     onPress={() => navigation.goBack()}
-                >Back</PaperButton>
+                >{i18n.t('back')}</PaperButton>
             </View>
             <View style={styles.container}>
                 <PaperSurface  style={styles.surface}>
-                    <Image source={{}}
+                    <Image source={{uri: route.params.PICTURES}}
                     style={{ width: 600, height: 500, marginBottom: 5 }}/>
                     <View style={styles.textContainer}>
                     <PaperDivider/>
-                        <PaperText style={styles.label}>Name</PaperText>
-                        <PaperText style={styles.year}>Year</PaperText>
-                        <PaperText style={styles.description}>Desc</PaperText>
+                        <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
+                        <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
+                        <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
@@ -31,12 +34,12 @@ export default function DetailScreen({navigation} : {navigation: any}, {route} :
                         icon="play-circle" mode="contained"
                         //Make button change to pause-circle when pressed
                         //onPress={() => }
-                        >Play</PaperButton>
+                        >{i18n.t('play')}</PaperButton>
                     <PaperButton 
                         icon="stop-circle" mode="contained"
                         //Make button change to pause when pressed
                         //onPress={() => ()}
-                        >Stop</PaperButton>
+                        >{i18n.t('stop')}</PaperButton>
                 </View>
             </View>
         </View>

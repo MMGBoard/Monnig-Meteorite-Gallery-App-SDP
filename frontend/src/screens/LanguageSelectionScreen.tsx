@@ -1,8 +1,15 @@
 import React, { Component, useContext, useEffect, useState } from 'react' ;
 import { Text, View, Button, StyleSheet } from 'react-native' ;
 import {Button as PaperButton, RadioButton } from 'react-native-paper' ;
-import  TranslateText  from '../components/TranslateText' ;
-import { SettingsContext } from '../components/SettingsContext'
+
+// User Defined components
+import { SettingsContext } from '../components/SettingsContext' ;
+import i18n from 'i18n-js' ;
+import { en, es, fr } from '../i18n/supportedLanguages' ;
+
+i18n.fallbacks = true ;
+i18n.translations = { en, es, fr } ;
+i18n.locale = 'en' ;
 
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
@@ -36,42 +43,63 @@ export async function translateRequest(value:string, target: string){
     }
 };
 
-export function handleLangChange(checked:any,setChecked:any){
+export function handleEngChange(checked:any,setChecked:any){
+    const { changeLangToEn } = React.useContext(SettingsContext);
+    changeLangToEn()
+    setChecked(checked)
+}
 
+export function handleEsChange(checked:any,setChecked:any){
+    const { changeLangToEs } = React.useContext(SettingsContext);
+    changeLangToEs
+    return (setChecked(checked))
+}
+
+export function handleFrChange(checked:any,setChecked:any){
+    const { changeLangToFr } = React.useContext(SettingsContext);
+    changeLangToFr
     return (setChecked(checked))
 }
 
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     let [_checked, setChecked] = React.useState('en');
-
-    const { currentLang_, changeLangToEn, changeLangToEs, changeLangToFr } = React.useContext(SettingsContext);
-
+    
     return (
         <View style={styles.container}>
             <Text style={styles.greeting}>
-                <TranslateText text="Welcome to TCU's Monnig Meteorite Gallery!" lang={currentLang_}/>
+                {i18n.t('welcomeMonnig')}
             </Text>
             
             <Text style={styles.header}> 
-                <TranslateText text="Please select your language preference" lang={currentLang_}/>
+            {i18n.t('selectLang')}
             </Text>
 
                 <View style={{alignSelf: 'center', width: "35%"}}>
-                    <RadioButton.Group  onValueChange={_checked => handleLangChange(_checked,setChecked)} value={_checked}>
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
-                        color="#4D1979" label="English" value="en" />
-
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                        color="#4D1979" label="Spanish" value="es" />
-                        
-                        <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO'}}
-                        color="#4D1979" label="French" value="fr" />
-                    </RadioButton.Group>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="en" color="#4D1979" label={i18n.t('english')} status={ _checked === 'en' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            //changeLangToEn()
+                            i18n.locale = 'en'
+                            setChecked('en')
+                        }}/>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="es" color="#4D1979" label={i18n.t('spanish')} status={ _checked === 'es' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            //changeLangToEs()
+                            i18n.locale = 'es'
+                            setChecked('es')
+                        }}/>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="fr" color="#4D1979" label={i18n.t('french')} status={ _checked === 'fr' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            //changeLangToFr()
+                            i18n.locale = 'fr'
+                            setChecked('fr')
+                        }}/>
                 </View>
             <View style={styles.continueButton}>
-                <PaperButton mode="contained" onPress={() => changeLangToFr()}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
-                <PaperButton mode="contained" onPress={() => navigation.navigate('AcuityScreen')}><TranslateText text="Continue" lang={currentLang_}/></PaperButton>
+                <PaperButton mode="contained" onPress={() => navigation.navigate('AcuityScreen')}>{i18n.t('continue')}</PaperButton>
             </View>
         </View>
     );

@@ -12,6 +12,8 @@ target 'frontend' do
     :hermes_enabled => false
   )
 
+  pod 'KontaktBeacons', :path => '../node_modules/react-native-kontaktio'
+
   target 'frontendTests' do
     inherit! :complete
     # Pods for testing

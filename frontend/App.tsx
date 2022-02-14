@@ -17,6 +17,7 @@
  import { ThemeContext } from './src/components/ThemeContextProvider';
  import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
+ import i18n from 'i18n-js' ;
  
  import {
    AcuityScreen,
@@ -25,7 +26,8 @@
    CatalogScreen,
    SettingsScreen,
    AssistanceScreen,
-   DetailScreen
+   DetailScreen,
+   BleTest
  } from './src/screens/';
  const Stack = createNativeStackNavigator();
  const TopTab = createMaterialTopTabNavigator();
@@ -34,9 +36,9 @@
   const dark = useTheme().dark;
    return (
      <TopTab.Navigator>
-       <TopTab.Screen name="Tour Assitance" component={AssistanceScreen} />
-       <TopTab.Screen name="Meteorite Catalog" component={CatalogScreen} />
-       <TopTab.Screen name="Settings" component={SettingsScreen} />
+       <TopTab.Screen name={i18n.t('tourAssist')} component={AssistanceScreen} />
+       <TopTab.Screen name={i18n.t('meteoriteCat')} component={CatalogScreen} />
+       <TopTab.Screen name={i18n.t('settings')} component={SettingsScreen} />
      </TopTab.Navigator>
    );
  }
@@ -68,6 +70,7 @@
               <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
               <Stack.Screen name="TabNavigator" component={TabNavigator} />
               <Stack.Screen name="DetailScreen" component={DetailScreen} />
+              <Stack.Screen name="BleTest" component={BleTest} />
               <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
               </Stack.Navigator>
             </NavigationContainer>
