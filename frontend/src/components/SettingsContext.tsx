@@ -2,11 +2,16 @@ import React from 'react';
 
 // Declaring the state object globally.
 const currentLanguageState = {
-    currentLang_: 'en',
+    currentLang_: 'en'
+};
+
+const currentFontState = {
+  currentFontSize_: 12
 };
   
 const settingsContextWrapper = (component?: React.Component) => ({
     ...currentLanguageState,
+    ...currentFontState,
     changeLangToEn: () => {
         currentLanguageState.currentLang_ = 'en'
         component?.setState({ context: settingsContextWrapper(component) });
@@ -19,6 +24,10 @@ const settingsContextWrapper = (component?: React.Component) => ({
         currentLanguageState.currentLang_ = 'fr'
         component?.setState({ context: settingsContextWrapper(component) });
     },
+    changeFontSizeTo: (size:number) => {
+        currentFontState.currentFontSize_ = size
+        component?.setState({ context: settingsContextWrapper(component) });
+    }
 });
   
 type Context = ReturnType<typeof settingsContextWrapper>;

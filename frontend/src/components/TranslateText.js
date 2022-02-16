@@ -31,5 +31,4 @@ class TranslateText extends Component {
         return this.state.text;
     }
 }
-
 export default TranslateText;

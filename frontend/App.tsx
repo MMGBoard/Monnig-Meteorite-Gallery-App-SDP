@@ -17,8 +17,11 @@
  import { ThemeContext } from './src/components/ThemeContextProvider';
  import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
+ import { LogBox } from 'react-native';
  import i18n from 'i18n-js' ;
  
+ LogBox.ignoreLogs(['new NativeEventEmitter']); 
+
  import {
    AcuityScreen,
    ColorBlindnessScreen,
