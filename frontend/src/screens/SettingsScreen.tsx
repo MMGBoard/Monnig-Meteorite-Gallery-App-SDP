@@ -27,55 +27,67 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
 
         <PaperDivider/>
 
-        <View style={styles.topcontainer}>
-          <PaperText style={styles.toplabel}>{i18n.t('colorbType')}</PaperText>
-          <SelectDropdown
-              data={blindnessTypes}
-              onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index)
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-            return selectedItem
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-            return item
-            }}
-          />
+        <View style={styles.sliderContainer}>
+          <View style={styles.leftColorContainer}>
+            <PaperText style={styles.leftLabel}>{i18n.t('colorbType')}</PaperText>
+          </View>
+          <View style={styles.rightColorContainer}>
+            <SelectDropdown
+                data={blindnessTypes}
+                onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index)
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+              return selectedItem
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+              return item
+              }}
+            />
+          </View>
         </View>
         <PaperDivider/>
-        <View style={styles.container}>
-          <PaperText style={styles.label}>  {i18n.t('brightness')}</PaperText>
-          <Slider
-            style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-            maximumValue={100}
-            minimumValue={1}
-            minimumTrackTintColor="#307ecc"
-            maximumTrackTintColor="#000000"
-            step={1}
-            value={brightnessValue}
-            onValueChange={
-              (sliderValue) => setbrightnessValue(sliderValue)
-            }
-          />
+        <View style={styles.sliderContainer}>
+          <View style={styles.leftContainer}>
+            <PaperText style={styles.leftLabel}>{i18n.t('brightness')}</PaperText>
+          </View>
+          <View style={styles.rightContainer}>
+            <Slider
+              style={{width: 300, marginLeft: "30%",marginBottom: 20}}
+              maximumValue={100}
+              minimumValue={1}
+              minimumTrackTintColor="#307ecc"
+              maximumTrackTintColor="#000000"
+              step={1}
+              value={brightnessValue}
+              onValueChange={
+                (sliderValue) => setbrightnessValue(sliderValue)
+              }
+            />
+          </View>
           <PaperText style={styles.label}>{brightnessValue}%</PaperText>
         </View>
         <PaperDivider/>
-        <View style={styles.container}>
-          <PaperText style={styles.label}>{i18n.t('fontSize')}  </PaperText>
-          <Slider
-            style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-            maximumValue={30}
-            minimumValue={10}
-            minimumTrackTintColor="#307ecc"
-            maximumTrackTintColor="#000000"
-            step={1}
-            value={fontSizeValue}
-            onValueChange={
-              (sliderValue) => setfontSizeValue(sliderValue)
-            }
-          />
+        <View style={styles.sliderContainer}>
+          <View style={styles.leftContainer}>
+            <PaperText style={styles.leftLabel}>{i18n.t('fontSize')}  </PaperText>
+          </View>
+          <View style={styles.rightContainer}>
+            <Slider
+              style={{width: 300, marginLeft: "30%",marginBottom: 20}}
+              maximumValue={30}
+              minimumValue={10}
+              minimumTrackTintColor="#307ecc"
+              maximumTrackTintColor="#000000"
+              step={1}
+              value={fontSizeValue}
+              onValueChange={
+                (sliderValue) => setfontSizeValue(sliderValue)
+              }
+            />
+          </View>
           <PaperText style={styles.label}>{fontSizeValue}</PaperText>
         </View>
         <PaperDivider/>
@@ -115,21 +127,25 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
 
           <PaperDivider/>
           <View style={styles.container}>
-            <PaperText style={styles.label}>{i18n.t('visualimpType')}  </PaperText>
-            <SelectDropdown
-              data={visiontype}
-              onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index)
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-            return selectedItem
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-            return item
-            }}
-          />
+            <View style={styles.leftVisualContainer}>
+              <PaperText style={styles.visualLabel}>{i18n.t('visualimpType')}  </PaperText>
+            </View>
+            <View style={styles.rightVisualContainer}>
+              <SelectDropdown
+                data={visiontype}
+                onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index)
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+              return selectedItem
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+              return item
+              }}
+              />
+            </View>
 
         </View>
         <PaperDivider/>
@@ -166,6 +182,42 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: 'center'
   },
+  leftContainer: {
+    paddingLeft: "10%",
+    width: "35%",
+    alignItems: "flex-start"
+  },
+  leftColorContainer: {
+    paddingLeft: "10%",
+    width: "40%",
+    alignItems: "flex-start"
+  },
+  leftVisualContainer: {
+    paddingLeft: "10%",
+    width: "40%",
+    alignItems: "flex-start"
+  },
+  rightContainer: {
+    flexDirection: "row",
+    width: "55%",
+    justifyContent: 'center',
+  },
+  rightColorContainer: {
+    flexDirection: "row",
+    width: "60%",
+    justifyContent: 'center',
+  },
+  rightVisualContainer: {
+    flexDirection: "row",
+    width: "60%",
+    justifyContent: 'center',
+  },
+  sliderContainer: {
+    width: "100%", 
+    flexDirection: "row", 
+    justifyContent: 'flex-start',
+    marginTop: "3%" 
+  },
   radioContainer: {
     flex: 1,
   },
@@ -185,6 +237,20 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: "center",
+    marginRight: 0,
+    fontSize: 24,
+    fontFamily: 'ROBOTO',
+    marginBottom: 30
+  },
+  visualLabel: {
+    textAlign: "center",
+    marginRight: 0,
+    fontSize: 24,
+    fontFamily: 'ROBOTO',
+    marginBottom: 30
+  },
+  leftLabel: {
+    textAlign: "left",
     marginRight: 0,
     fontSize: 24,
     fontFamily: 'ROBOTO',
