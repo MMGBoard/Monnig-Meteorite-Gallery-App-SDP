@@ -22,7 +22,7 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
         <View style={styles.container}>
         <View style={styles.radioContainer}>
         <PaperText style={styles.label}>{i18n.t('selectFont')}</PaperText>
-          <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+          <RadioButton.Group onValueChange={(newValue: any) => setValue(newValue)} value={value}>
             <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
                 label={i18n.t('welcomeTCU')} value="firstChoice" />
             <RadioButton.Item labelStyle={{fontSize: 24, fontFamily: 'ROBOTO'}} 
