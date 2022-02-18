@@ -29,7 +29,8 @@
    CatalogScreen,
    SettingsScreen,
    AssistanceScreen,
-   DetailScreen
+   DetailScreen,
+   BleTest
  } from './src/screens/';
  const Stack = createNativeStackNavigator();
  const TopTab = createMaterialTopTabNavigator();
@@ -49,11 +50,12 @@
   const [isDarkTheme, setDarkTheme] = React.useState(false);
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-  const themeContext = {
+
+  const themeContext = React.useMemo(() => ({
     toggleTheme: () => {
       setDarkTheme( isDarkTheme => !isDarkTheme );
-    },
-  }
+    }
+  }), []);
 
 
    return (
@@ -71,6 +73,7 @@
               <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
               <Stack.Screen name="TabNavigator" component={TabNavigator} />
               <Stack.Screen name="DetailScreen" component={DetailScreen} />
+              <Stack.Screen name="BleTest" component={BleTest} />
               <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
               </Stack.Navigator>
             </NavigationContainer>

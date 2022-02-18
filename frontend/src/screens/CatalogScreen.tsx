@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { Button, Card, Paragraph, Searchbar, List, Colors } from 'react-native-paper';
+import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Picker } from '@react-native-picker/picker';
 import i18n from 'i18n-js' ;
@@ -41,7 +41,10 @@ export default function CatalogScreen({navigation} : {navigation: any}) {
 
 // Set screen to loading if still fetching data
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+    <View style={styles.activityLoaderContainer}>
+      <ActivityIndicator size="large"/>
+    </View>);
   }
 
 const onSubmitted = () => {
@@ -97,7 +100,7 @@ const onSubmitted = () => {
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" />
         </Picker>
-        <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder={i18n.t('search')} onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>
+       {/**  <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder={i18n.t('search')} onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>*/}
       </View>
      
       <FlatList style={{ margin: 5 }}
@@ -122,6 +125,10 @@ const onSubmitted = () => {
 }
 
 const styles = StyleSheet.create({
+  activityLoaderContainer: {
+    flex: 1,
+    justifyContent: "center"
+  },
   container: {
     flex: 1,
     paddingBottom: 30,

@@ -12,6 +12,7 @@ target 'frontend' do
     :hermes_enabled => false
   )
 
+  pod 'KontaktBeacons', :path => '../node_modules/react-native-kontaktio'
   pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
 
   target 'frontendTests' do
