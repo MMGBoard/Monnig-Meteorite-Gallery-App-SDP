@@ -13,6 +13,7 @@ target 'frontend' do
   )
 
   pod 'KontaktBeacons', :path => '../node_modules/react-native-kontaktio'
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
 
   target 'frontendTests' do
     inherit! :complete
