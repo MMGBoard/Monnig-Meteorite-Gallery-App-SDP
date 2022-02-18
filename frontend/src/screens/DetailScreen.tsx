@@ -4,6 +4,7 @@ import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider
 import { useRoute } from '@react-navigation/native'
 import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
+import Tts from 'react-native-tts'
 
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
@@ -33,12 +34,17 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperButton 
                         icon="play-circle" mode="contained"
                         //Make button change to pause-circle when pressed
-                        //onPress={() => }
+                        onPress={() => Tts.getInitStatus().then(() => {
+                            Tts.speak(route.params.DESCRIPTION)}, (err) => {
+                                if (err.code === 'no_engine') {
+                                Tts.requestInstallEngine()
+                            }
+                        })}
                         >{i18n.t('play')}</PaperButton>
                     <PaperButton 
                         icon="stop-circle" mode="contained"
                         //Make button change to pause when pressed
-                        //onPress={() => ()}
+                        onPress={() => Tts.stop()}
                         >{i18n.t('stop')}</PaperButton>
                 </View>
             </View>
