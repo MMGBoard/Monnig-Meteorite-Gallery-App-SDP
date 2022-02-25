@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle, I18nManager } from 'react-native';
 import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native'
 import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
 import Tts from 'react-native-tts'
+import { stringLiteral } from '@babel/types';
 
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
     const route = useRoute<any>();
-
+    let ttsTarget = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />
+    let [status, setStatus] = useState("Stop")
     return (
         <View>
             <View style={styles.backButton}>
@@ -27,24 +29,19 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperDivider/>
                         <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
                         <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
+                        <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} status={status}/></PaperText>
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
                     <PaperButton 
                         icon="play-circle" mode="contained"
                         //Make button change to pause-circle when pressed
-                        onPress={() => Tts.getInitStatus().then(() => {
-                            Tts.speak(route.params.DESCRIPTION)}, (err) => {
-                                if (err.code === 'no_engine') {
-                                Tts.requestInstallEngine()
-                            }
-                        })}
+                        onPress={() => setStatus("Play")}
                         >{i18n.t('play')}</PaperButton>
                     <PaperButton 
                         icon="stop-circle" mode="contained"
                         //Make button change to pause when pressed
-                        onPress={() => Tts.stop()}
+                        onPress={() => setStatus("Stop")}
                         >{i18n.t('stop')}</PaperButton>
                 </View>
             </View>
