@@ -11,6 +11,12 @@ i18n.fallbacks = true ;
 i18n.translations = { en, es, fr } ;
 i18n.locale = 'en' ;
 
+/**
+ * Function performs a GET fetch request on google's google translate server. Server returns a JSON response
+ * @param value string passed in to translate.
+ * @param target target language to translate to.
+ * @returns promise and translated string are returned.
+ */
 export async function translateRequest(value:string, target: string){
     let fromLang = 'en';        // source lsang to translate from ( default is English )
     let toLang = target;        // target lang to translate to
@@ -61,6 +67,11 @@ export function handleFrChange(checked:any,setChecked:any){
     return (setChecked(checked))
 }
 
+/**
+ * Displays Language Selection screen to record user's language preference.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function LanguageSelectionScreen(this: any, {navigation} : {navigation: any}) {
     const image = { uri: "https://wallpaperaccess.com/full/1954699.jpg" };
     let [_checked, setChecked] = React.useState('en');
