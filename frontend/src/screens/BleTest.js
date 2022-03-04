@@ -1,14 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {
-  Text,
-  View,
-  DeviceEventEmitter,
-  FlatList,
-  StyleSheet,
-  PermissionsAndroid,
-  TouchableOpacity,
+    TouchableOpacity,
+    Text,
+    StatusBar,
+    Linking,
+    View
 } from 'react-native';
 import Beacons from 'react-native-beacons-manager';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,106 +35,114 @@ const styles = StyleSheet.create({
 });
 
 class BleTest extends Component {
-  /*
-  state = {
-  // Target Lang to translate to
-    uuidRef: this.props.uuidRef,
-    identifier: 'TEST BEACON 1',
-    dataSource: []
-  };*/
   constructor(props) {
     super(props);
     this.state = {
-      //region information
-      uuidRef: null,
-      identifier: 'TEST BEACON 1',
-      //React Native ListView datasource initialization
-      dataSource: [],
+        scan: false,
+        ScanResult: false,
+        result: null
     };
-  }
-  async requestLocationPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          //The user is prompted why you want this permission after the first request is rejected
-          title: 'I want the address query permission' ,
-          message: 'I cant have permission Work, just agree' ,
-        },
-      );
+}
 
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You have obtained the address query permission' );
-      } else {
-        console.log('Get address query failed' );
-      }
-    } catch (err) {
-      console.log(err.toString());
+onSuccess = (e) => {
+    const check = e.data.substring(0, 4);
+    console.log('scanned data' + check);
+    this.setState({
+        result: e,
+        scan: false,
+        ScanResult: true
+    })
+    if (check === 'http') {
+        Linking
+            .openURL(e.data)
+            .catch(err => console.error('An error occured', err));
+
+
+    } else {
+        this.setState({
+            result: e,
+            scan: false,
+            ScanResult: true
+        })
     }
-  }
 
-  componentWillMount() {
-    //ONLY non component state aware here in componentWillMount
-    Beacons.detectIBeacons();
+}
 
-    const {identifier, uuid} = this.state;
-    const FBeacons = {identifier, uuid};
-    Beacons.startRangingBeaconsInRegion(FBeacons)
-      .then(() => console.log('Beacons ranging started succesfully'))
-      .catch(error =>
-        console.log(`Beacons ranging not started, error: ${error}`),
-      );
-  }
-  componentDidMount() {
-    //component state aware here - attach events
-    //surrounding data acquisition beacon
-    DeviceEventEmitter.addListener('beaconsDidRange', data => {
-      var dataArr = [];
-      dataArr = data.beacons;
-      console.log(data.beacons);
-      this.setState({
-        dataSource: dataArr,
-      });
-    });
-    //Beacons.stopRangingBeaconsInRegion('TEST BEACON 1');
-  }
-  componentWillUnMount() {
-    this.beaconsDidRange = null;
-  }
-
-  renderItem = (item, index) => {
-    const list = item.item;
+activeQR = () => {
+    this.setState({
+        scan: true
+    })
+}
+scanAgain = () => {
+    this.setState({
+        scan: true,
+        ScanResult: false
+    })
+}
+render() {
+    const { scan, ScanResult, result } = this.state
+    const desccription = 'QR code (abbreviated from Quick Response Code) is the trademark for a type of matrix barcode (or two-dimensional barcode) first designed in 1994 for the automotive industry in Japan. A barcode is a machine-readable optical label that contains information about the item to which it is attached. In practice, QR codes often contain data for a locator, identifier, or tracker that points to a website or application. A QR code uses four standardized encoding modes (numeric, alphanumeric, byte/binary, and kanji) to store data efficiently; extensions may also be used.'
     return (
-      <View style={styles.row}>
-        <Text style={styles.smallText}>
-          UUID:{list.uuid ? list.uuid : 'NA'}
-        </Text>
-        <Text style={styles.smallText}>
-          Major:{list.major ? list.major : 'NA'}
-        </Text>
-        <Text style={styles.smallText}>
-          Minor:{list.minor ? list.minor : 'NA'}
-        </Text>
-        <Text>RSSI:{list.rssi ? list.rssi : 'NA'} </Text>
-        <Text>Proximity: {list.proximity ? list.proximity : 'NA'}</Text>
-        <Text>Distance: {list.distance ? list.distance : 'NA'}</Text>
-      </View>
+        <View style={styles.scrollViewStyle}>
+            <Fragment>
+                <StatusBar barStyle="dark-content" />
+                <Text style={styles.textTitle}>Welcome To React-Native QR Code Tutorial !</Text>
+                {!scan && !ScanResult &&
+                    <View style={styles.cardView} >
+                        <Text numberOfLines={8} style={styles.descText}>{desccription}</Text>
+
+                        <TouchableOpacity onPress={this.activeQR} style={styles.buttonTouchable}>
+                            <Text style={styles.buttonTextStyle}>Click to Scan !</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                }
+
+                {ScanResult &&
+                    <Fragment>
+                        <Text style={styles.textTitle1}>Result !</Text>
+                        <View style={ScanResult ? styles.scanCardView : styles.cardView}>
+                            <Text>Type : {result.type}</Text>
+                            <Text>Result : {result.data}</Text>
+                            <Text numberOfLines={1}>RawData: {result.rawData}</Text>
+                            <TouchableOpacity onPress={this.scanAgain} style={styles.buttonTouchable}>
+                                <Text style={styles.buttonTextStyle}>Click to Scan again!</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                    </Fragment>
+                }
+
+
+                {scan &&
+                    <QRCodeScanner
+                        reactivate={true}
+                        showMarker={true}
+                        ref={(node) => { this.scanner = node }}
+                        onRead={this.onSuccess}
+                        topContent={
+                            <Text style={styles.centerText}>
+                                Go to <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code to test.</Text>
+                        }
+                        bottomContent={
+                            <View>
+                                <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.scanner.reactivate()}>
+                                    <Text style={styles.buttonTextStyle}>OK. Got it!</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.buttonTouchable} onPress={() => this.setState({ scan: false })}>
+                                    <Text style={styles.buttonTextStyle}>Stop Scan</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        }
+                    />
+                }
+            </Fragment>
+        </View>
+
     );
-  };
-  render() {
-    const {dataSource} = this.state;
-    return (
-      <View style={styles.container}>
-        <Text style={styles.headline}>All beacons in the area</Text>
-        <FlatList data={dataSource} renderItem={this.renderItem} />
-        <TouchableOpacity
-          style={styles.button_view}
-          onPress={this.requestLocationPermission.bind(this)}>
-          <Text> Apply for access address permissions </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+}
 }
 
 export default BleTest;

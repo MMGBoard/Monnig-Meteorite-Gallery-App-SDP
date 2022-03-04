@@ -67,9 +67,6 @@ const displayUpdate = (displayName: string) => {
 });
 }
   
-
-
-// Render return
   return (
     <View style={styles.mainContainer}>
       <Image source={imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
