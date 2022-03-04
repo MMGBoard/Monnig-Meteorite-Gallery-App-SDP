@@ -6,7 +6,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Picker } from '@react-native-picker/picker';
 import i18n from 'i18n-js' ;
 
-
+/**
+ * Displays Meteorite Catalog screen to display collection of meteorites from TCU's Meteorite Database.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
@@ -92,13 +96,13 @@ const onSubmitted = () => {
     <View>
       <View style={styles.container}>
         <Picker style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 1}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
+          {/* <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('catalogNo')} value="CATALOG" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('category')} value="CATEGORY" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */}
         </Picker>
        {/**  <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder={i18n.t('search')} onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>*/}
       </View>

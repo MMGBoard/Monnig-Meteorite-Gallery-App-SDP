@@ -11,6 +11,12 @@ import firestore from '@react-native-firebase/firestore';
 import { Button as PaperButton, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+/**
+ * Displays Tour Assistance screen to present and assist the user through the TCU Monnig Meteorite Gallery.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
+
 export default function AssistanceScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users

@@ -8,6 +8,12 @@ import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
 import { SettingsContext } from '../components/SettingsContext' ;
 
+
+/**
+ * Displays Setting screen to allow user to modify and change preferences within the tour.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const blindnessTypes = ["Deuteranomaly", "Protanomaly", "Protanopia"]
     const visiontype = ["Blurred Vision", "Type 1", "Type 2", "Type 3"]
