@@ -10,16 +10,17 @@ class TranslateText extends Component {
         status: this.props.status   // TTS status
     };
 
-    test(){
-        console.log("Printing test")
-        Tts.setDefaultLanguage("en")                   
-        Tts.speak(this.props.text)
-    }
-
     async doTranslate(){
+        console.log("translation start")
         const translatedString = await translateRequest(this.props.text,this.props.lang)
         console.log("translatedString ->",translatedString)
-        this.setState({ text: translatedString})
+        this.setState({ text: translatedString}, ()=>{console.log("text3: " + translatedString);})
+        if(this.props.status=="Play"){
+            Tts.setDefaultLanguage(this.props.lang)
+            Tts.speak(translatedString)
+        }else{
+            Tts.stop()
+        }
     }
 
     async componentDidMount(){
@@ -29,18 +30,16 @@ class TranslateText extends Component {
     }
 
     async componentDidUpdate(prevProp){
-        if(!equal(this.props.lang, prevProp.lang))
+        if(!equal(this.props.lang, prevProp.lang)||!equal(this.props.status, prevProp.status))
         if(this.props.lang != 'en'){  // if target lang is 'en' => do not translate and just return string
             await this.doTranslate()
-            // if(this.props.status == "Play"){
-            //     //this.test()
-            //     console.log("Play callback received")
-            // }
-            // if(this.props.status == "Stop"){
-            //     //this.test()
-            //     console.log("Stop callback received")
-            // }
-            console.log(this.props.status)
+        }else{
+            if(this.props.status=="Play"){
+                Tts.setDefaultLanguage(this.props.lang)
+                Tts.speak(this.props.text)
+            }else{
+                Tts.stop()
+            }
         }
     }
 
