@@ -5,6 +5,12 @@ import { en, es, fr } from '../i18n/supportedLanguages' ;
 import { RadioButton, Button as PaperButton, Text as PaperText, useTheme, TouchableRipple } from 'react-native-paper';
 import { SettingsContext } from '../components/SettingsContext'
 
+
+/**
+ * Displays acuity screen to record user font preference.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function AcuityScreen({navigation} : {navigation: any}) {
 
   const [value, setValue] = React.useState('secondChoice');

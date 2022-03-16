@@ -12,7 +12,14 @@ target 'frontend' do
     :hermes_enabled => false
   )
 
+  pod 'KontaktBeacons', :path => '../node_modules/react-native-kontaktio'
   pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
 
   target 'frontendTests' do
     inherit! :complete

@@ -18,6 +18,7 @@
  import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
  import { LogBox } from 'react-native';
+ import SplashScreen from  "react-native-splash-screen";
  import i18n from 'i18n-js' ;
  
  LogBox.ignoreLogs(['new NativeEventEmitter']); 
@@ -29,7 +30,8 @@
    CatalogScreen,
    SettingsScreen,
    AssistanceScreen,
-   DetailScreen
+   DetailScreen,
+   BleTest
  } from './src/screens/';
  const Stack = createNativeStackNavigator();
  const TopTab = createMaterialTopTabNavigator();
@@ -49,11 +51,17 @@
   const [isDarkTheme, setDarkTheme] = React.useState(false);
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-  const themeContext = {
+
+  const themeContext = React.useMemo(() => ({
     toggleTheme: () => {
       setDarkTheme( isDarkTheme => !isDarkTheme );
-    },
-  }
+    }
+  }), []);
+
+  //Hide Splash screen on app load.
+  React.useEffect(() => {
+    SplashScreen.hide();
+  });
 
 
    return (
@@ -71,6 +79,7 @@
               <Stack.Screen name="ColorBlindnessScreen" component={ColorBlindnessScreen} />
               <Stack.Screen name="TabNavigator" component={TabNavigator} />
               <Stack.Screen name="DetailScreen" component={DetailScreen} />
+              <Stack.Screen name="BleTest" component={BleTest} />
               <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
               </Stack.Navigator>
             </NavigationContainer>

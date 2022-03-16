@@ -6,12 +6,16 @@ import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
 import Tts from 'react-native-tts'
 
-
-
+/**
+ * Displays contents of an individual meteorite and its associated metadata.
+ * @param param0 Used for passing card
+ * @returns React Components to render to App
+ */
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
     const route = useRoute<any>();
+    const text = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />;
 
     return (
         <View>
