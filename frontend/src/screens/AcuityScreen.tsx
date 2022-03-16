@@ -14,7 +14,7 @@ import { SettingsContext } from '../components/SettingsContext'
 export default function AcuityScreen({navigation} : {navigation: any}) {
 
   const [value, setValue] = React.useState('secondChoice');
-  const { currentLang_ } = React.useContext(SettingsContext);
+  const { currentFontSize_, changeFontSizeTo } = React.useContext(SettingsContext);
   
   return (
     <View>
@@ -28,16 +28,30 @@ export default function AcuityScreen({navigation} : {navigation: any}) {
         <View style={styles.container}>
         <View style={styles.radioContainer}>
         <PaperText style={styles.label}>{i18n.t('selectFont')}</PaperText>
-          <RadioButton.Group onValueChange={(newValue: any) => setValue(newValue)} value={value}>
-            <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
-                label={i18n.t('welcomeTCU')} value="firstChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 24, fontFamily: 'ROBOTO'}} 
-                label={i18n.t('welcomeTCU')} value="secondChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 36, fontFamily: 'ROBOTO'}}
-                label={i18n.t('welcomeTCU')} value="thirdChoice" />
-            <RadioButton.Item labelStyle={{fontSize: 48, fontFamily: 'ROBOTO'}}
-                label={i18n.t('welcomeTCU')} value="fourthChoice" />
-          </RadioButton.Group>
+          <RadioButton.Item labelStyle={{fontSize: 18, fontFamily: 'ROBOTO'}}
+            label={i18n.t('welcomeTCU')} value="firstChoice" status={ value === 'firstChoice' ? 'checked' : 'unchecked'} onPress={() =>
+            {
+              changeFontSizeTo(18)
+              setValue("firstChoice")
+            }}/>
+          <RadioButton.Item labelStyle={{fontSize: 24, fontFamily: 'ROBOTO'}}
+            label={i18n.t('welcomeTCU')} value="secondChoice" status={ value === 'secondChoice' ? 'checked' : 'unchecked'} onPress={() =>
+            {
+              changeFontSizeTo(24)
+              setValue("secondChoice")
+            }}/>
+          <RadioButton.Item labelStyle={{fontSize: 36, fontFamily: 'ROBOTO'}}
+            label={i18n.t('welcomeTCU')} value="thirdChoice" status={ value === 'thirdChoice' ? 'checked' : 'unchecked'} onPress={() =>
+            {
+              changeFontSizeTo(36)
+              setValue("thirdChoice")
+            }}/>
+          <RadioButton.Item labelStyle={{fontSize: 48, fontFamily: 'ROBOTO'}}
+            label={i18n.t('welcomeTCU')} value="fourthChoice" status={ value === 'fourthChoice' ? 'checked' : 'unchecked'} onPress={() =>
+            {
+              changeFontSizeTo(48)
+              setValue("fourthChoice")
+            }}/>
         </View></View>
         <View> 
           <View style={styles.nextButton}>  

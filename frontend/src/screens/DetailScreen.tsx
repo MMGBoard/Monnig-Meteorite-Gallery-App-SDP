@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native'
 import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
 import Tts from 'react-native-tts'
+import { SettingsContext } from '../components/SettingsContext'
 
 /**
  * Displays contents of an individual meteorite and its associated metadata.
@@ -14,6 +15,7 @@ import Tts from 'react-native-tts'
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
+    const { currentFontSize_ } = React.useContext(SettingsContext)
     const route = useRoute<any>();
     const text = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />;
 
@@ -33,7 +35,7 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperDivider/>
                         <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
                         <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
+                        <PaperText style={{ textAlign: "left", marginRight: 10, fontSize: currentFontSize_, fontFamily: 'ROBOTO', marginBottom: 5 }}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
@@ -109,12 +111,6 @@ const styles = StyleSheet.create({
         fontFamily: 'ROBOTO',
         fontStyle: 'italic',
         marginBottom: 5,
-        marginLeft:15
-    },
-    description: {
-        textAlign: "left",
-        fontSize: 20,
-        fontFamily: 'ROBOTO',
         marginLeft:15
     },
     surface: {
