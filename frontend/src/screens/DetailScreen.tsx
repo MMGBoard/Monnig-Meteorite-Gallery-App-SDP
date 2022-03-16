@@ -18,7 +18,9 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
             <View style={styles.backButton}>
                 <PaperButton 
                     icon="chevron-left" mode="contained"
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                        Tts.stop(),
+                        navigation.goBack()}}
                 >{i18n.t('back')}</PaperButton>
             </View>
             <View style={styles.container}>
