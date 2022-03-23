@@ -46,11 +46,11 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 // text represented after item is selected
-              return selectedItem
+                return selectedItem
               }}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
-              return item
+                return item
               }}
             />
           </View>
