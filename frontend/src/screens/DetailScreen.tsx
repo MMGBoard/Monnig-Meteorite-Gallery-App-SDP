@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { ActivityIndicator, FlatList, View, Text, Image, ScrollView, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import { Button as PaperButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText, IconButton as PaperIconButton, DefaultTheme} from 'react-native-paper';
 import { useRoute } from '@react-navigation/native'
 import i18n from 'i18n-js' ;
@@ -35,7 +35,9 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperDivider/>
                         <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
                         <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <PaperText style={{ textAlign: "left", marginRight: 10, fontSize: currentFontSize_, fontFamily: 'ROBOTO', marginBottom: 5 }}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
+                        <ScrollView>
+                            <PaperText style={{ textAlign: "left", marginRight: 10, fontSize: currentFontSize_, fontFamily: 'ROBOTO', marginBottom: 5 }}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
+                        </ScrollView>
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     },
     surface: {
         padding: 8,
-        height: '82%',
+        height: '84%',
         width: '100%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
