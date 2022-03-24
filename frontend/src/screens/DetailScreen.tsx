@@ -31,7 +31,7 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperDivider/>
                         <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
                         <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <ScrollView>
+                        <ScrollView >
                             <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} status={status}/></PaperText>
                         </ScrollView>
                     </View>
