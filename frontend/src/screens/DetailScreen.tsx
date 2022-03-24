@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle, I18nManager } from 'react-native';
+import { ActivityIndicator, FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle, I18nManager, ScrollView } from 'react-native';
 import { Button as PaperButton, IconButton as PaperIconButton, Paragraph, List, Colors, Divider as PaperDivider, Surface as PaperSurface, useTheme, Text as PaperText } from 'react-native-paper';
 import { useRoute } from '@react-navigation/native'
 import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
 import Tts from 'react-native-tts'
-import { stringLiteral } from '@babel/types';
+import { ThemeContext } from '../components/ThemeContextProvider';
 
 
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
@@ -31,17 +31,19 @@ export default function DetailScreen({navigation} : {navigation: any}) { //Add P
                     <PaperDivider/>
                         <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
                         <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} status={status}/></PaperText>
+                        <ScrollView>
+                            <PaperText style={styles.description}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} status={status}/></PaperText>
+                        </ScrollView>
                     </View>
                 </PaperSurface>
                 <View style={styles.buttonContainer}>
                     <PaperIconButton 
-                        icon="play-circle" size={130}
+                        icon="play-circle" size={130} color='#4D1979'
                         //Make button change to pause-circle when pressed
                         onPress={() => setStatus("Play")}
                         >{i18n.t('play')}</PaperIconButton>
                     <PaperIconButton 
-                        icon="stop-circle" size={130}
+                        icon="stop-circle" size={130} color='#4D1979'
                         //Make button change to pause when pressed
                         onPress={() => setStatus("Stop")}
                         >{i18n.t('stop')}</PaperIconButton>
