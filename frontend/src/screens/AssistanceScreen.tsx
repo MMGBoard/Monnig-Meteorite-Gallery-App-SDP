@@ -106,6 +106,7 @@ const requestLocationPermission = async () => {
   }
 };
 
+
 const requestCameraPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -453,7 +454,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
         horizontal={true}
         renderItem={({ item }) => (
           <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
-            <Card>
+            <Card  onPress={() => navigation.navigate('DetailScreen' , item)}>
               <Card.Cover source={{ uri: item.PICTURES}} resizeMode='cover'/>
               <Card.Title title={item.METEORITE_} subtitle={item.CATALOG} />
               <Card.Content>

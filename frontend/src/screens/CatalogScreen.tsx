@@ -7,7 +7,11 @@ import { Picker } from '@react-native-picker/picker';
 import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
 
-
+/**
+ * Displays Meteorite Catalog screen to display collection of meteorites from TCU's Meteorite Database.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
@@ -157,7 +161,7 @@ const searchFilterFunction = (text: string) => {
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" />
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */}
         </Picker>
       </View>
      <View>
@@ -166,7 +170,7 @@ const searchFilterFunction = (text: string) => {
         numColumns={2}
         renderItem={({ item }) => (
           <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
-            <Card>
+            <Card  onPress={() => navigation.navigate('DetailScreen' , item)}>
               <Card.Cover source={{ uri: item.PICTURES}} resizeMode='cover'/>
               <Card.Title title={item.METEORITE_} subtitle={item.CATALOG} />
               <Card.Content>

@@ -8,14 +8,20 @@ import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
 import { SettingsContext } from '../components/SettingsContext' ;
 
+
+/**
+ * Displays Setting screen to allow user to modify and change preferences within the tour.
+ * @param navigation Used for directing to different screen.
+ * @returns React Components to render to App.
+ */
 export default function SettingsScreen({navigation} : {navigation: any}) {
     const blindnessTypes = ["Deuteranomaly", "Protanomaly", "Protanopia"]
     const visiontype = ["Blurred Vision", "Type 1", "Type 2", "Type 3"]
+    const { currentLang_, currentFontSize_ ,changeFontSizeTo } = React.useContext(SettingsContext);
     const [brightnessValue, setbrightnessValue] = useState(15);
-    const [fontSizeValue, setfontSizeValue] = useState(15);
+    const [fontSizeValue, setfontSizeValue] = useState(currentFontSize_);
     const paperTheme = useTheme();
     const {toggleTheme} = React.useContext(ThemeContext);  
-    const { currentLang_, currentFontSize_ } = React.useContext(SettingsContext);
     
     let [value, setValue] = React.useState(currentLang_);
 
@@ -40,11 +46,11 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 // text represented after item is selected
-              return selectedItem
+                return selectedItem
               }}
               rowTextForSelection={(item, index) => {
                 // text represented for each item in dropdown
-              return item
+                return item
               }}
             />
           </View>
@@ -66,6 +72,9 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
               onValueChange={
                 (sliderValue) => setbrightnessValue(sliderValue)
               }
+              onSlidingComplete={
+                () => {SystemSetting.setAppBrightness(brightnessValue/100)}
+              }
             />
           </View>
           <PaperText style={styles.label}>{brightnessValue}%</PaperText>
@@ -78,14 +87,18 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
           <View style={styles.rightContainer}>
             <Slider
               style={{width: 300, marginLeft: "30%",marginBottom: 20}}
-              maximumValue={30}
-              minimumValue={10}
+              maximumValue={48}
+              minimumValue={18}
               minimumTrackTintColor="#307ecc"
               maximumTrackTintColor="#000000"
               step={1}
               value={fontSizeValue}
               onValueChange={
-                (sliderValue) => setfontSizeValue(sliderValue)
+                (sliderValue) => 
+                {
+                  setfontSizeValue(sliderValue)
+                  changeFontSizeTo(sliderValue)
+                }
               }
             />
           </View>
