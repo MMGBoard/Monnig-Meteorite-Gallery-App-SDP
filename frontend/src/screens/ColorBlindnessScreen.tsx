@@ -1,63 +1,26 @@
 import React, { useState } from 'react'
 import { Text, View, StyleSheet, FlatList } from 'react-native';
-import { Button as PaperButton, Text as PaperText, Switch, useTheme } from 'react-native-paper';
+import { Button as PaperButton, Text as PaperText, Switch, useTheme, IconButton as PaperIconButton } from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
 import i18n from 'i18n-js' ;
 import { ThemeContext } from '../components/ThemeContextProvider';
 import { SettingsContext } from '../components/SettingsContext'
 
-const colors = [
-  { id: 1, txt: "Red", isChecked: false },
-  { id: 2, txt: "Green", isChecked: false },
-  { id: 3, txt: "Blue", isChecked: false },
-  { id: 4, txt: "Dark Blue", isChecked: false },
-];
 
 export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
-  const [items, setItems] = useState(colors);
   const paperTheme = useTheme();
   const {toggleTheme} = React.useContext(ThemeContext);  
   const { currentLang_ } = React.useContext(SettingsContext);
-
-  
-  const handleChange = (id: number) => {
-    let temp = items.map((color) => {
-      if (id === color.id) {
-        return { ...color, isChecked: !color.isChecked };
-      }
-      return color;
-    });
-    setItems(temp);
-  };
-  
-  const renderFlatList = (renderData: readonly any[] | null | undefined) => {
-    return (
-      <FlatList
-        data={renderData}
-        renderItem={({ item }) => (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flex: 1,
-
-                }}>
-                <CheckBox
-                  style={styles.checkbox}
-                  tintColors={{ true: '#4D1979' }}
-                  onCheckColor="#4D1979"
-                  value={item.isChecked}
-                  onChange={() => {
-                    handleChange(item.id);
-                  }}
-                />
-                <PaperText style={styles.label}>{item.txt}</PaperText>
-              </View>
-        )}
-      />
-    );
-    };
-
+  let themeString = "";
+  let color = "";
+  if(!paperTheme.dark) {
+    themeString = "Dark Mode"
+    color = "#4D1979"
+  } else {
+    themeString = "Light Mode"
+    color = "#FFC107"
+  }
     return (
       <View>
         <View style={styles.backButton}>
@@ -67,20 +30,22 @@ export default function ColorBlindnessScreen({navigation} : {navigation: any}) {
           >{i18n.t('back')}
           </PaperButton>
         </View>
-        
-        <View style={styles.container}>
-          <PaperText style={styles.header}>{i18n.t('selectColors')}</PaperText>
-          <View style={styles.checkboxContainer}><View>{renderFlatList(items)}</View></View>
-          <PaperText style={styles.header}>{i18n.t('selectBlind')}</PaperText>
-            <RNPickerSelect 
-                placeholder={{ label: i18n.t('selectBlind'), value: null }} 
-                onValueChange={(value) => console.log(value)}
-                items={[
-                    { label: 'Deuteranomaly', value: 'deuteranomaly' },
-                    { label: 'Protanomaly', value: 'protanomaly' },
-                    { label: 'Protanopia', value: 'protanopia' },
-                ]}
-            />
+        <View style={{
+            position: 'absolute', 
+            top: 0, left: 0, 
+            right: 0, bottom: 0, 
+            justifyContent: 'center', 
+            alignItems: 'center'}}>
+            <PaperText style={styles.themeLabel}>
+                {i18n.t('selectTheme')}
+            </PaperText>
+                      <PaperIconButton 
+                        icon="theme-light-dark" size={130} color={color}
+                        //Make button change to pause-circle when pressed
+                        onPress={toggleTheme}
+                        >{themeString}</PaperIconButton>    
+          </View>
+            <View style={styles.container}>
           <View style={styles.nextButton}>  
             <PaperButton mode="contained"
               onPress={() => navigation.navigate('TabNavigator')}
@@ -99,6 +64,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 30,
     alignSelf: 'flex-start'
+  },
+  themeLabel: {
+    textAlign: "center",
+    fontSize: 24,
+    fontFamily: "Rationale"
   },
   themeCard: {
     marginLeft: 300,

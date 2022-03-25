@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import { Button, Card, Paragraph, ActivityIndicator, Searchbar, List, Colors } from 'react-native-paper';
+import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyle, TextInput } from 'react-native';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { Button as PaperButton, Card, Paragraph, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Picker } from '@react-native-picker/picker';
+import { ThemeContext } from '../components/ThemeContextProvider' ;
 import i18n from 'i18n-js' ;
 
 /**
@@ -14,8 +15,12 @@ import i18n from 'i18n-js' ;
 export default function CatalogScreen({navigation} : {navigation: any}) {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
   const [meteorites, setMeteorites] = useState<any[]>([]); // Initial empty array of users
+  const [meteorites_, setMeteorites_] = useState<any[]>([]); // Initial empty array of users
+  const [filteredMeteorites, setFilteredMeteorites] = useState<any[]>([]); // Initial empty array of users
   const [searchQuery, setSearchQuery] = React.useState(''); // Initial component state setting 
   const [selectedValue, setSelectedValue] = useState("METEORITE_");
+  const [filterSet, SetFilterSet] = useState<any[]>([]);
+  const [searchText, setSearchText] = React.useState("");
   const onChangeSearch = (query: React.SetStateAction<string>) => setSearchQuery(query); // Method to setSearchQuery to what is written in bar
 
   const detailsStack = createNativeStackNavigator();
@@ -23,22 +28,25 @@ export default function CatalogScreen({navigation} : {navigation: any}) {
 
   // Component to read data from Firestore database and initializes meteors array.
   useEffect(() => {
+  //  getCollection();
     const subscriber = firestore()
       .collection('meteorites')
       .onSnapshot(querySnapshot => {
         const meteors: React.SetStateAction<any[]> =  []
-  
+        const meteors_: React.SetStateAction<any[]> =  []
         querySnapshot.forEach(documentSnapshot => {
+          meteors_.push(documentSnapshot.data());
           meteors.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
         });
-  
+        setFilteredMeteorites(meteors_);
+        setMeteorites_(meteors_);
         setMeteorites(meteors);
         setLoading(false);
       });
-  
+    
     // Unsubscribe from events when no longer in use
     return () => subscriber();
   }, []);
@@ -72,12 +80,12 @@ const onSubmitted = () => {
       setLoading(false);
     });
   }
+
   if (searchQuery == ""){
     firestore()
       .collection('meteorites')
       .onSnapshot(querySnapshot => {
         const meteors: React.SetStateAction<any[]> =  []
-  
         querySnapshot.forEach(documentSnapshot => {
           meteors.push({
             ...documentSnapshot.data(),
@@ -91,24 +99,74 @@ const onSubmitted = () => {
   }
 }
 
+const searchFilterFunction = (text: string) => {
+  // Check if searched text is not blank
+  console.log("text: "+ text)
+  if (text) {
+    // Inserted text is not blank
+    // Filter the masterDataSource
+    // Update FilteredDataSource
+
+    const newData = meteorites_.filter(
+      function (item: any) {
+        if(selectedValue == "METEORITE_") {
+          const itemData = item.METEORITE_
+            ? item.METEORITE_.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          console.log("search:"+ textData);
+          return itemData.indexOf(textData) > -1;
+        } else if(selectedValue == "CATEGORY") {
+          const itemData = item.CATEGORY
+            ? item.CATEGORY.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          console.log("search:"+ textData);
+          return itemData.indexOf(textData) > -1;
+        } else if(selectedValue == "GROUP") {
+          const itemData = item.GROUP
+            ? item.GROUP.toUpperCase()
+            : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          console.log("search:"+ textData);
+          return itemData.indexOf(textData) > -1;
+        } 
+    });
+    setFilteredMeteorites(newData);
+    setSearchText(text);
+  } else {
+    // Inserted text is blank
+    // Update FilteredDataSource with masterDataSource
+    setFilteredMeteorites(meteorites_);
+    setSearchText(text);
+  }
+};
+//const arrayOfValueAs = meteorites.map((stateObj) => stateObj.data["PICTURES"]);
+
 // Render return
   return (
     <View>
       <View style={styles.container}>
-        <Picker style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 1}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
-          {/* <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
+        <TextInput
+            style={styles.textInputStyleLight}
+            //label="Email"
+            value={searchText}
+            placeholder="Search Here"
+            onChangeText={(text) => searchFilterFunction(text)}
+          />
+        <Picker style={{flex:0.25, justifyContent: 'center', alignContent: 'center', height: 50, width: 50}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('catalogNo')} value="CATALOG" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('category')} value="CATEGORY" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */}
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */
         </Picker>
-       {/**  <Searchbar style={{flex:0.5, justifyContent: 'center', alignContent: 'center', height: 50, flexGrow: 3}} placeholder={i18n.t('search')} onChangeText={onChangeSearch} value={searchQuery} onSubmitEditing={()=>onSubmitted()}/>*/}
       </View>
-     
-      <FlatList style={{ margin: 5 }}
-        data={meteorites}
+     <View>
+      <FlatList style={{ marginTop: 15 }}
+        data={filteredMeteorites}
         numColumns={2}
         renderItem={({ item }) => (
           <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
@@ -119,11 +177,12 @@ const onSubmitted = () => {
                 <Paragraph>{item.LOCATION}</Paragraph>
               </Card.Content>
               <Card.Actions>
-                <Button onPress={() => navigation.navigate('DetailScreen' , item)}>{i18n.t('view')}</Button>
+                <PaperButton onPress={() => navigation.navigate('DetailScreen' , item)}>{i18n.t('view')}</PaperButton>
               </Card.Actions>
             </Card>
           </View>
         )} />
+      </View>
     </View>
   );
 }
@@ -138,5 +197,13 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingTop: 10,
     flexDirection: 'row'
+  },
+  textInputStyleLight: {
+    flex:0.75, justifyContent: 'center', alignContent: 'center', height: 50,
+    borderWidth: 1,
+    paddingLeft: 20,
+    margin: 5,
+    borderColor: '#009688',
+    backgroundColor: '#FFFFFF',
   }
 });

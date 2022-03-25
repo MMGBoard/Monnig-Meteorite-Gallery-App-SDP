@@ -1,6 +1,6 @@
 import React, { Component, useContext, useEffect, useState } from 'react' ;
-import { Text, View, Button, StyleSheet } from 'react-native' ;
-import {Button as PaperButton, RadioButton } from 'react-native-paper' ;
+import { View, Button, StyleSheet } from 'react-native' ;
+import {Button as PaperButton, RadioButton, Text as PaperText } from 'react-native-paper' ;
 import Config from "react-native-config";
 
 // User Defined components
@@ -78,13 +78,13 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
 
     return (
         <View style={styles.container}>
-            <Text style={styles.greeting}>
+            <PaperText style={styles.greeting}>
                 {i18n.t('welcomeMonnig')}
-            </Text>
+            </PaperText>
             
-            <Text style={styles.header}> 
+            <PaperText style={styles.header}> 
             {i18n.t('selectLang')}
-            </Text>
+            </PaperText>
 
                 <View style={{alignSelf: 'center', width: "35%"}}>
                     <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
