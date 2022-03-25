@@ -161,7 +161,7 @@ const searchFilterFunction = (text: string) => {
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */}
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */
         </Picker>
       </View>
      <View>
