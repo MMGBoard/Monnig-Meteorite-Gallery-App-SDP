@@ -6,56 +6,58 @@ import i18n from 'i18n-js' ;
 import TranslateText from '../components/TranslateText'
 import Tts from 'react-native-tts'
 import { SettingsContext } from '../components/SettingsContext'
+import { ThemeContext } from '../components/ThemeContextProvider';
 
 /**
  * Displays contents of an individual meteorite and its associated metadata.
  * @param param0 Used for passing card
  * @returns React Components to render to App
  */
-
-export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
-    const [flexDirection, setflexDirection] = useState("column");
-    const { currentFontSize_ } = React.useContext(SettingsContext)
-    const route = useRoute<any>();
-    const text = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />;
-
-    return (
-        <View>
-            <View style={styles.backButton}>
-                <PaperButton 
-                    icon="chevron-left" mode="contained"
-                    onPress={() => navigation.goBack()}
-                >{i18n.t('back')}</PaperButton>
-            </View>
-            <View style={styles.container}>
-                <PaperSurface  style={styles.surface}>
-                    <Image source={{uri: route.params.PICTURES}}
-                    style={styles.image}/>
-                    <View style={styles.textContainer}>
-                    <PaperDivider/>
-                        <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
-                        <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
-                        <ScrollView>
-                            <PaperText style={{ textAlign: "left", marginRight: 10, fontSize: currentFontSize_, fontFamily: 'ROBOTO', marginBottom: 5 }}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} /></PaperText>
-                        </ScrollView>
+    export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
+        const [flexDirection, setflexDirection] = useState("column");
+        const { currentFontSize_ } = React.useContext(SettingsContext)
+        const route = useRoute<any>();
+        let ttsTarget = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />
+        let [status, setStatus] = useState("Stop")
+        return (
+            <View>
+                <View style={styles.backButton}>
+                    <PaperButton 
+                        icon="chevron-left" mode="contained"
+                        onPress={() => {
+                            Tts.stop(),
+                            navigation.goBack()}}
+                    >{i18n.t('back')}</PaperButton>
+                </View>
+                <View style={styles.container}>
+                    <PaperSurface  style={styles.surface}>
+                        <Image source={{uri: route.params.PICTURES}}
+                        style={styles.image}/>
+                        <View style={styles.textContainer}>
+                        <PaperDivider/>
+                            <PaperText style={styles.label}>{route.params.METEORITE_}</PaperText>
+                            <PaperText style={styles.year}>{route.params.DATE_FOUND}</PaperText>
+                            <ScrollView >
+                                <PaperText style={{textAlign: "left", fontFamily: 'ROBOTO', marginLeft: 15, fontSize: currentFontSize_}}><TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} status={status}/></PaperText>
+                            </ScrollView>
+                        </View>
+                    </PaperSurface>
+                    <View style={styles.buttonContainer}>
+                        <PaperIconButton 
+                            icon="play-circle" size={130} color='#4D1979'
+                            //Make button change to pause-circle when pressed
+                            onPress={() => setStatus("Play")}
+                            ></PaperIconButton>
+                        <PaperIconButton 
+                            icon="stop-circle" size={130} color='#4D1979'
+                            //Make button change to pause when pressed
+                            onPress={() => setStatus("Stop")}
+                            ></PaperIconButton>
                     </View>
-                </PaperSurface>
-                <View style={styles.buttonContainer}>
-                    <PaperIconButton 
-                        icon="play-circle" size = {130}
-                        //Make button change to pause-circle when pressed
-                        onPress={() => (Tts.speak(route.params.DESCRIPTION))}
-                        ></PaperIconButton>
-                    <PaperIconButton 
-                        icon="stop-circle" size={130}
-                        //Make button change to pause when pressed
-                        onPress={() => Tts.stop()}
-                        ></PaperIconButton>
                 </View>
             </View>
-        </View>
-    );
-}
+        );
+    }
 
 
 const styles = StyleSheet.create({
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
     },
     surface: {
         padding: 8,
-        height: '84%',
+        height: '82%',
         width: '100%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
