@@ -7,21 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   PermissionsAndroid,
-  Button,
-  Image,
-  FlatList
+  Button
 } from 'react-native';
-
-import firestore from '@react-native-firebase/firestore';
-import {
-  Button as PaperButton,
-  Card,
-  Paragraph,
-  ActivityIndicator,
-  Searchbar,
-  List,
-  Colors } from 'react-native-paper';
-
 import Kontakt from 'react-native-kontaktio';
 import type { ColorValue } from 'react-native';
 import type {
@@ -29,11 +16,6 @@ import type {
   RegionType,
   IBeaconAndroid,
 } from 'react-native-kontaktio';
-
-import { NavigationInjectedProps, withNavigation } from 'react-navigation';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import i18n from 'i18n-js' ;
-
 
 const {
   connect,
@@ -78,9 +60,6 @@ type State = {
   beacons: Array<typeof IBeaconAndroid>;
   eddystones: Array<typeof IBeaconAndroid>;
   statusText: string | null;
-  isLoading: boolean;
-  meteorites: Array<any>;
-  qrCamera: boolean;
 };
 
 const requestLocationPermission = async () => {
@@ -106,34 +85,6 @@ const requestLocationPermission = async () => {
   }
 };
 
-const requestCameraPermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA, 
-      {
-        title: "Cool Photo App Camera Permission",
-        message:
-          "Cool Photo App needs access to your camera " +
-          "so you can take awesome pictures.",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the camera");
-    } else {
-      console.log("Camera permission denied");
-    }
-  } catch (err) {
-    console.warn(err);
-  }
-};
-
-interface Props {
-  navigation: any
-}
-
 /**
  * Monitors beacons in two regions and sorts them by proximity,
  * color-coded by minors with values 1 through 5.
@@ -152,40 +103,15 @@ interface Props {
  * sorted by their RSSI which reflects a measure of distance from the beacons
  * to your mobile phone.
  */
-export default class AssistanceScreen extends Component<Props,{}, State> {
-  
+export default class BleTest extends Component<{}, State> {
   state: State = {
     scanning: false,
     beacons: [],
     eddystones: [],
     statusText: null,
-    isLoading: true,
-    meteorites: [],
-    qrCamera: false
   };
 
-  imagePath = require("../../images/mmgMap.png");
-  detailsStack = createNativeStackNavigator();
-
   componentDidMount() {
-    requestCameraPermission();
-    requestLocationPermission();
-    
-    const subscriber = firestore()
-    .collection('meteorites')
-    .onSnapshot(querySnapshot => {
-      const meteors: React.SetStateAction<any[]> =  []
-
-      querySnapshot.forEach(documentSnapshot => {
-        meteors.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
-      });
-
-      this.setState({meteorites: meteors, isLoading: false});
-    });
-
     // Initialization, configuration and adding of beacon regions
     const config: typeof ConfigType = {
       scanMode: scanMode.BALANCED,
@@ -209,7 +135,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     DeviceEventEmitter.addListener(
       'beaconDidAppear',
       ({ beacon: newBeacon, region }) => {
-        console.log('beaconDidAppear', newBeacon.identifier);
+        console.log('beaconDidAppear', newBeacon, region);
 
         this.setState({
           beacons: this.state.beacons.concat(newBeacon),
@@ -272,15 +198,8 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
 
     // Region listeners
     DeviceEventEmitter.addListener('regionDidEnter', ({ region }) => {
-      console.log("new region" + region.major);
-      if(region.major = '3838') {
-        this.displayUpdate('Entrance')
-      } else if (region.major = '2828') {
-        this.displayUpdate('Mexico')
-      }
       console.log('regionDidEnter', region);
     });
-    
     DeviceEventEmitter.addListener('regionDidExit', ({ region }) => {
       console.log('regionDidExit', region);
     });
@@ -289,7 +208,6 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     DeviceEventEmitter.addListener('monitoringCycle', ({ status }) => {
       console.log('monitoringCycle', status);
     });
-    this._startScanning();
   }
 
   componentWillUnmount() {
@@ -393,121 +311,35 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     </TouchableOpacity>
   );
 
-  displayUpdate = (displayName: string) => {
-    this.setState({isLoading: true});
-    firestore()
-    .collection('meteorites')
-    .where('DISPLAY_NAME', 'in', [displayName])
-    .get()
-    .then(querySnapshot => {
-      const meteors: React.SetStateAction<any[]> =  []
-  
-      querySnapshot.forEach(documentSnapshot => {
-        meteors.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
-        });
-      });
-      this.setState({meteorites: meteors, isLoading: false});
-  });
-  }
-/*
-  changeMode = () => {
-    this.setState({qrCamera: true});
-  }
-  devices = useCameraDevices()
-  device = this.devices.back
-*/
   render() {
+    const { scanning, beacons } = this.state;
+
     return (
-      <View style={styles.mainContainer}>
-        { !this.state.qrCamera &&
-        <Image source={this.imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
-        }
-        <View style={styles.testButtons}>
-          <PaperButton mode="contained" onPress={() => null}>
-          Display 1</PaperButton>
-          <PaperButton mode="contained" onPress={() => this.displayUpdate('Texas')}>
-          Display 2</PaperButton>
-          <PaperButton mode="contained" onPress={() => this.displayUpdate('Mexico')}>
-          Display 3</PaperButton>
-          <PaperButton mode="contained" onPress={() => this.displayUpdate('test4')}>
-          Display 4</PaperButton>
-        </View>
+      <View style={styles.container}>
         <Button title="request permissions" onPress={requestLocationPermission} />
         <View style={styles.buttonContainer}>
           {this._renderButton('Start scan', this._startScanning, '#84e2f9')}
           {this._renderButton('Stop scan', this._stopScanning, '#84e2f9')}
           {this._renderButton('Restart scan', this._restartScanning, '#84e2f9')}
         </View>
-
-      { this.state.isLoading &&
-        <View style={styles.activityLoaderContainer}>
-          <ActivityIndicator size="large"/>
+        <View style={styles.buttonContainer}>
+          {this._renderButton('Is scanning?', this._isScanning, '#f2a2a2')}
+          {this._renderButton('Is connected?', this._isConnected, '#f2a2a2')}
         </View>
-      } 
-
-      { !this.state.isLoading &&
-      <FlatList style={{ margin: 5 }}
-        data={this.state.meteorites}
-        horizontal={true}
-        renderItem={({ item }) => (
-          <View style={{ flex: 1 / 2, marginVertical: 25,marginHorizontal: 5, backgroundColor: '#ddd', height: 300, borderRadius: 15}}>
-            <Card>
-              <Card.Cover source={{ uri: item.PICTURES}} resizeMode='cover'/>
-              <Card.Title title={item.METEORITE_} subtitle={item.CATALOG} />
-              <Card.Content>
-                <Paragraph>{item.LOCATION}</Paragraph>
-              </Card.Content>
-              <Card.Actions>
-              <PaperButton onPress={() => this.props.navigation.navigate('DetailScreen' , item)}>{i18n.t('view')}</PaperButton>
-              </Card.Actions>
-            </Card>
-          </View>
-        )} />
-      }
-
-      <View style={styles.buttonContainer}>
-          <PaperButton 
-              icon="play-circle" mode="contained"
-              //Make button change to pause-circle when pressed
-              //onPress={() => }
-              >Play</PaperButton>
-          <PaperButton 
-              icon="stop-circle" mode="contained"
-              //Make button change to pause when pressed
-              //onPress={() => ()}
-              >Stop</PaperButton>
-      </View>   
+        <View style={styles.buttonContainer}>
+          {this._renderButton(
+            'Beacon regions (log)',
+            this._getBeaconRegions,
+            '#F4ED5A'
+          )}
+        </View>
+        {this._renderStatusText()}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flexDirection: "column",
-    flex: 1,
-    padding: 5,
-  },
-  activityLoaderContainer: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  testButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  pauseButton: {
-      marginTop: 30,
-      marginLeft: 30,
-      alignSelf: 'flex-start',
-      justifyContent: 'center'
-  },
-  playButton: {
-      alignSelf: 'flex-start',
-      justifyContent: 'center'
-  },
   container: {
     flex: 1,
   },
@@ -534,5 +366,3 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
-
-//export default withNavigation(AssistanceScreen);
