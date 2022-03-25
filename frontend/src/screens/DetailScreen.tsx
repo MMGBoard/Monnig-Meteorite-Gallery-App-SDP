@@ -10,6 +10,7 @@ import Tts from 'react-native-tts'
 export default function DetailScreen({navigation} : {navigation: any}) { //Add Params for passing card
     const [flexDirection, setflexDirection] = useState("column");
     const route = useRoute<any>();
+    const text = <TranslateText text={route.params.DESCRIPTION} lang={i18n.locale} />;
 
     return (
         <View>

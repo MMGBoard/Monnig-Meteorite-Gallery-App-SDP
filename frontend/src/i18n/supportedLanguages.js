@@ -19,6 +19,7 @@ const en = {
     next: 'Next',
 
     // ColorBlindnessScreen.tsx
+    selectTheme: 'Select your prefered theme by pressing below:',
     selectColors: 'Select colors you are not able to see:',
     red: 'Red',
     green: 'Green',
@@ -77,6 +78,7 @@ const es = {
     next: 'Próximo',
 
     // ColorBlindnessScreen.tsx
+    selectTheme: 'Seleccione su tema preferido presionando a continuación:',
     selectColors: 'Seleccione los colores que no puede ver:',
     red: 'Rojo',
     green: 'Verde',
@@ -135,6 +137,7 @@ const fr = {
     next: 'Suivant',
 
     // ColorBlindnessScreen.tsx
+    selectTheme: 'Seleccione su tema preferido presionando a continuación:',
     selectColors: 'Sélectionnez les couleurs que vous ne pouvez pas voir :',
     red: 'Rouge',
     green: 'Vert',

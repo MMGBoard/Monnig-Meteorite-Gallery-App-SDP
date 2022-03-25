@@ -18,6 +18,7 @@
  import { SettingsContextProvider } from './src/components/SettingsContext';
  import { CustomDefaultTheme, CustomDarkTheme } from './src/styles/theme';
  import { LogBox } from 'react-native';
+ import SplashScreen from  "react-native-splash-screen";
  import i18n from 'i18n-js' ;
  
  LogBox.ignoreLogs(['new NativeEventEmitter']); 
@@ -56,6 +57,11 @@
       setDarkTheme( isDarkTheme => !isDarkTheme );
     }
   }), []);
+
+  //Hide Splash screen on app load.
+  React.useEffect(() => {
+    SplashScreen.hide();
+  });
 
 
    return (
