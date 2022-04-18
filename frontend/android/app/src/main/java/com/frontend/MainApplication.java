@@ -4,12 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-<<<<<<< HEAD
 import com.artirigo.kontaktio.KontaktPackage;
-=======
 import net.no_mad.tts.TextToSpeechPackage;
->>>>>>> 863779ea3939b8798d3231a637091002418eeddb
-import com.mackentoch.beaconsandroid.BeaconsAndroidPackage;
 import com.artirigo.kontaktio.KontaktPackage;
 import net.no_mad.tts.TextToSpeechPackage;
 import com.facebook.react.ReactInstanceManager;
