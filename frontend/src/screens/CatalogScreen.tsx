@@ -3,8 +3,8 @@ import { FlatList, View, Text, Image, StyleSheet, StyleProp, ViewProps, ViewStyl
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { Button as PaperButton, Card, Paragraph, ActivityIndicator, Searchbar } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Picker } from '@react-native-picker/picker';
 import { ThemeContext } from '../components/ThemeContextProvider' ;
+import { Picker } from '@react-native-picker/picker';
 import i18n from 'i18n-js' ;
 
 /**
@@ -144,6 +144,8 @@ const searchFilterFunction = (text: string) => {
 //const arrayOfValueAs = meteorites.map((stateObj) => stateObj.data["PICTURES"]);
 
 // Render return
+  const searchType = ['METEORITE_', 'CATALOG', 'CATEGORY','CLASS',
+                  'DATE_FOUND','GROUP', 'LOCATION'];
   return (
     <View>
       <View style={styles.container}>
@@ -154,16 +156,16 @@ const searchFilterFunction = (text: string) => {
             placeholder="Search Here"
             onChangeText={(text) => searchFilterFunction(text)}
           />
-        <Picker style={{flex:0.25, justifyContent: 'center', alignContent: 'center', height: 50, width: 50}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
+      <Picker style={{flex:0.25, justifyContent: 'center', alignContent: 'center', height: 50, width: 50}} selectedValue={selectedValue} onValueChange={(itemValue) => setSelectedValue(itemValue)}>
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('name')} value="METEORITE_" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('catalogNo')} value="CATALOG" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('category')} value="CATEGORY" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('class')} value="CLASS" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('year')} value="DATE_FOUND" />
           <Picker.Item style={{fontSize: 20}}label= {i18n.t('group')} value="GROUP" />
-          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" /> */
-        </Picker>
-      </View>
+          <Picker.Item style={{fontSize: 20}}label= {i18n.t('location')} value="LOCATION" />
+       </Picker>
+       </View>
      <View>
       <FlatList style={{ marginTop: 15 }}
         data={filteredMeteorites}

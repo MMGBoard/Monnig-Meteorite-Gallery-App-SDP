@@ -1,368 +1,367 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  DeviceEventEmitter,
-  ScrollView,
-  TouchableOpacity,
-  PermissionsAndroid,
-  Button
-} from 'react-native';
-import Kontakt from 'react-native-kontaktio';
-import type { ColorValue } from 'react-native';
-import type {
-  ConfigType,
-  RegionType,
-  IBeaconAndroid,
-} from 'react-native-kontaktio';
 
-const {
-  connect,
-  configure,
-  disconnect,
-  isConnected,
-  startScanning,
-  stopScanning,
-  restartScanning,
-  isScanning,
-  // setBeaconRegion,
-  setBeaconRegions,
-  getBeaconRegions,
-  setEddystoneNamespace,
-  IBEACON,
-  EDDYSTONE,
-  // Configurations
-  scanMode,
-  scanPeriod,
-  activityCheckConfiguration,
-  forceScanConfiguration,
-  monitoringEnabled,
-  monitoringSyncInterval,
-} = Kontakt;
+import * as React from 'react';
+import { Text, Linking, Dimensions, SafeAreaView, TouchableOpacity, StyleSheet, View, Platform, Alert, Switch, BackHandler } from 'react-native';
+import { Camera, useCameraDevices, useFrameProcessor } from 'react-native-vision-camera';
+import { DBRConfig, decode, TextResult } from 'vision-camera-dynamsoft-barcode-reader';
+import * as REA from 'react-native-reanimated';
 
-const region1: typeof RegionType = {
-  identifier: 'BlueCharm_1',
-  uuid: '426C7565-4368-6172-6D42-6561636F6E73',
-  major: 3838,
-  // no minor provided: will detect all minors
-};
+import { Polygon, Text as SVGText, Svg, Rect } from 'react-native-svg';
+import ActionSheet from '@alessiocancian/react-native-actionsheet';
+import Clipboard from '@react-native-clipboard/clipboard';
 
-const region2: typeof RegionType = {
-  identifier: 'BlueCharm_2',
-  uuid: '426C7565-4368-6172-6D42-6561636F6E73',
-  major: 2828,
-  // no minor provided: will detect all minors
-};
+let pressedResult:TextResult|undefined;
 
-type State = {
-  scanning: boolean;
-  beacons: Array<typeof IBeaconAndroid>;
-  eddystones: Array<typeof IBeaconAndroid>;
-  statusText: string | null;
-};
+export default function BleTest({navigation} : {navigation: any}) {
+  const mounted = REA.useSharedValue(true);
+  const rotated = REA.useSharedValue(false);
+  const regionEnabledShared = REA.useSharedValue(false);
+  const continuous = false;
+  const [hasPermission, setHasPermission] = React.useState(false);
+  const [barcodeResults, setBarcodeResults] = React.useState([] as TextResult[]);
+  const [buttonText, setButtonText] = React.useState("Pause");
+  const [isActive, setIsActive] = React.useState(true);
+  const [frameWidth, setFrameWidth] = React.useState(1280);
+  const [frameHeight, setFrameHeight] = React.useState(720);
+  const [regionEnabled, setRegionEnabled] = React.useState(false);
+  const [torchEnabled, setTorchEnabled] = React.useState(false);
+  const [useFront, setUseFront] = React.useState(false);
+  const useFrontShared = REA.useSharedValue(false);
 
-const requestLocationPermission = async () => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: "Location Permission",
-        message:
-          "Tour Assistance needs access to your location...",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK"
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("Location access");
-    } else {
-      console.log("Location permission denied");
-    }
-  } catch (err) {
-    console.warn(err);
-  }
-};
+  const devices = useCameraDevices();
+  const frontCam = devices.front;
+  const backCam = devices.back;
 
-/**
- * Monitors beacons in two regions and sorts them by proximity,
- * color-coded by minors with values 1 through 5.
- *
- * Just change the values in the regions to work with your beacons.
- * Then press `Start scanning` and you should very soon see your beacons
- * in a ScrollView sorted by their 'accuracy' which reflects a measure of
- * distance from the beacons to your mobile phone in meters.
- *
- * This example makes use of regions to limit scanning to beacons
- * belonging to one of these two regions.
- * Of course regions can also be used to separately process the data later.
- * Such logic may be built inside the listeners.
- *
- * Press `Start scanning` and you should very soon see your beacons in a ScrollView
- * sorted by their RSSI which reflects a measure of distance from the beacons
- * to your mobile phone.
- */
-export default class BleTest extends Component<{}, State> {
-  state: State = {
-    scanning: false,
-    beacons: [],
-    eddystones: [],
-    statusText: null,
-  };
+  let actionSheetRef = React.useRef(null);
+  let scanned = false;
 
-  componentDidMount() {
-    // Initialization, configuration and adding of beacon regions
-    const config: typeof ConfigType = {
-      scanMode: scanMode.BALANCED,
-      scanPeriod: scanPeriod.create({
-        activePeriod: 6000,
-        passivePeriod: 20000,
-      }),
-      activityCheckConfiguration: activityCheckConfiguration.DEFAULT,
-      forceScanConfiguration: forceScanConfiguration.MINIMAL,
-      monitoringEnabled: monitoringEnabled.TRUE,
-      monitoringSyncInterval: monitoringSyncInterval.DEFAULT,
+  React.useEffect(() => {
+    (async () => {
+      const status = await Camera.requestCameraPermission();
+      setHasPermission(status === 'authorized');
+    })();
+
+    const backAction = () => {
+      setIsActive(false);
+      navigation.goBack();
+      return true;
     };
 
-    connect('MY_KONTAKTIO_API_KEY', [IBEACON, EDDYSTONE])
-      .then(() => configure(config))
-      .then(() => setBeaconRegions([region1, region2]))
-      .then(() => setEddystoneNamespace(null))
-      .catch((error: any) => console.log('error', error));
-
-    // Beacon listeners
-    DeviceEventEmitter.addListener(
-      'beaconDidAppear',
-      ({ beacon: newBeacon, region }) => {
-        console.log('beaconDidAppear', newBeacon, region);
-
-        this.setState({
-          beacons: this.state.beacons.concat(newBeacon),
-        });
-      }
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
     );
 
-    /**
-    DeviceEventEmitter.addListener(
-      'beaconDidDisappear',
-      ({ beacon: lostBeacon, region }) => {
-     //   console.log('beaconDidDisappear', lostBeacon, region);
+    return () => backHandler.remove();
+  }, []);
 
-        const { beacons } = this.state;
-        const index = beacons.findIndex((beacon) =>
-          this._isIdenticalBeacon(lostBeacon, beacon)
-        );
-        this.setState({
-          beacons: beacons.reduce<Array<typeof IBeaconAndroid>>((result, val, ind) => {
-            // don't add disappeared beacon to array
-            if (ind === index) return result;
-            // add all other beacons to array
-            else {
-              result.push(val);
-              return result;
+  React.useEffect(()=>{
+    mounted.value = true; // to avoid the error: Can’t perform a React state update on an unmounted component.
+    return () => { mounted.value = false };
+  });
+
+  const onBarCodeDetected = (results:TextResult[]) => {
+    if (continuous == false && scanned== false){
+      console.log("Barcodes detected. Navigating");
+      setIsActive(false);
+      scanned = true;
+      console.log("Yeloooo: ", results[0].barcodeText);
+      navigation.navigate('AssistanceScreen', results[0]);
+    }
+  };
+
+  const toggleCameraStatus = () => {
+    if (buttonText=="Pause"){
+      setButtonText("Resume");
+      setIsActive(false);
+    }else{
+      setButtonText("Pause");
+      setIsActive(true);
+    }
+  };
+
+  const getPointsData = (lr:TextResult) => {
+    var pointsData = lr.x1 + "," + lr.y1 + " ";
+    pointsData = pointsData+lr.x2 + "," + lr.y2 +" ";
+    pointsData = pointsData+lr.x3 + "," + lr.y3 +" ";
+    pointsData = pointsData+lr.x4 + "," + lr.y4;
+    return pointsData;
+  }
+
+  const getViewBox = () => {
+    const frameSize = getFrameSize();
+    const viewBox = "0 0 "+frameSize[0]+" "+frameSize[1];
+   // console.log("viewBox"+viewBox);
+    updateRotated();
+    return viewBox;
+  }
+
+  const getFrameSize = ():number[] => {
+    let width:number, height:number;
+    if (HasRotation()){
+      width = frameHeight;
+      height = frameWidth;
+    }else {
+      width = frameWidth;
+      height = frameHeight;
+    }
+    return [width, height];
+  }
+
+  const HasRotation = () => {
+    let value = false
+    if (Platform.OS === 'android') {
+      if (!(frameWidth>frameHeight && Dimensions.get('window').width>Dimensions.get('window').height)){
+        value = true;
+      }
+    }
+    return value;
+  }
+
+  const updateRotated = () => {
+    rotated.value = HasRotation();
+  }
+
+  const updateFrameSize = (width:number, height:number) => {
+    if (mounted.value) {
+      setFrameWidth(width);
+      setFrameHeight(height);
+    }
+  }
+
+  const onBarcodeScanned = (results:TextResult[]) =>{
+    if (mounted.value) {
+      setBarcodeResults(results);
+      if (results.length>0) {
+        onBarCodeDetected(results);
+      }
+    }
+  }
+
+  const format = React.useMemo(() => {
+    const desiredWidth = 1280;
+    const desiredHeight = 720;
+    let selectedCam;
+    if (useFront){
+      selectedCam = frontCam;
+    }else{
+      selectedCam = backCam;
+    }
+    if (selectedCam){
+      for (let index = 0; index < selectedCam.formats.length; index++) {
+        const format = selectedCam.formats[index];
+       // console.log("h: "+format.videoHeight);
+        //console.log("w: "+format.videoWidth);
+        if (format.videoWidth == desiredWidth && format.videoHeight == desiredHeight){
+          console.log("select format: "+format);
+          return format;
+        }
+      };
+    }
+    return undefined;
+  }, [useFront])
+
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet'
+  //  console.log("height: "+frame.height);
+    //console.log("width: "+frame.width);
+    REA.runOnJS(updateFrameSize)(frame.width, frame.height);
+    const config:DBRConfig = {};
+    //config.template="{\"ImageParameter\":{\"BarcodeFormatIds\":[\"BF_QR_CODE\"],\"Description\":\"\",\"Name\":\"Settings\"},\"Version\":\"3.0\"}";
+    config.isFront=useFrontShared.value;
+    if (regionEnabledShared.value){
+      let settings;
+      if (config.template){
+        settings = JSON.parse(config.template);
+      }else{
+        const template = 
+        `{
+          "ImageParameter": {
+            "Name": "Settings"
+          },
+          "Version": "3.0"
+        }`;
+        settings = JSON.parse(template);
+      }
+      settings["ImageParameter"]["RegionDefinitionNameArray"] = ["Settings"];
+      settings["RegionDefinition"] = {
+                                      "Left": 10,
+                                      "Right": 90,
+                                      "Top": 20,
+                                      "Bottom": 65,
+                                      "MeasuredByPercentage": 1,
+                                      "Name": "Settings",
+                                    };
+      config.template = JSON.stringify(settings);
+    }
+
+    const results:TextResult[] = decode(frame,config)
+    REA.runOnJS(onBarcodeScanned)(results);
+  }, [])
+  
+  return (
+      <SafeAreaView style={styles.container}>
+        { backCam != null &&
+        hasPermission && (
+        <>
+            <Camera
+            style={StyleSheet.absoluteFill}
+            device={useFront ? frontCam : backCam}
+            isActive={isActive}
+            format={format}
+            torch={torchEnabled ? "on" : "off"}
+            frameProcessor={frameProcessor}
+            frameProcessorFps={5}
+            />
+        </>)}
+        <ActionSheet
+          ref={actionSheetRef}
+          title={'Select your action'}
+          options={['View details', 'Open the link', 'Copy the text', 'Cancel']}
+          cancelButtonIndex={3}
+          onPress={async (index) => {
+            if (pressedResult){
+              if (index == 0){
+                navigation.navigate("Info", {"barcode":pressedResult});
+              } else if (index == 1) {
+                const url = pressedResult.barcodeText;
+                const supported = await Linking.canOpenURL(url);
+                if (supported) {
+                  await Linking.openURL(url);
+                } else {
+                  Alert.alert(`Don't know how to open this URL: ${url}`);
+                }
+              } else if (index == 2) {
+                Clipboard.setString(pressedResult.barcodeText);
+              }
             }
-          }, []),
-        });
-      }
-    );
-    DeviceEventEmitter.addListener(
-      'beaconsDidUpdate',
-      ({
-        beacons: updatedBeacons,
-        region,
-      }: {
-        beacons: Array<typeof IBeaconAndroid>;
-        region: typeof RegionType;
-      }) => {
-        console.log('beaconsDidUpdate', updatedBeacons, region);
+          }}
+        />
+        <Svg style={StyleSheet.absoluteFill} viewBox={getViewBox()}>
+          {regionEnabled &&
+          <Rect 
+            x={0.1*getFrameSize()[0]}
+            y={0.2*getFrameSize()[1]}
+            width={0.8*getFrameSize()[0]}
+            height={0.45*getFrameSize()[1]}
+            strokeWidth="2"
+            stroke="red"
+          />}
+          {barcodeResults.map((barcode, idx) => (
+            <Polygon key={"poly-"+idx}
+            points={getPointsData(barcode)}
+            fill="lime"
+            stroke="green"
+            opacity="0.5"
+            strokeWidth="1"
+            onPress={() => {
+              setButtonText("Resume");
+              setIsActive(false);
+              pressedResult = barcode;
+              actionSheetRef.current.show();
+            }}
+            />
+          ))}
+           {barcodeResults.map((barcode, idx) => (
+            <SVGText key={"text-"+idx}
+              fill="white"
+              stroke="purple"
+              fontSize={getFrameSize()[0]/400*20}
+              fontWeight="bold"
+              x={barcode.x1}
+              y={barcode.y1}
+            >
+              {barcode.barcodeText}
+            </SVGText>
+          ))}
+        </Svg>
+        <View style={styles.control}>
+          <View style={{flex:0.8}}>
+            <View style={styles.switchContainer}>
+              <Text style={{alignSelf: "center", color: "black"}}>Scan Region</Text>
+              <Switch
+                style={{alignSelf: "center"}}
+                trackColor={{ false: "#767577", true: "black" }}
+                thumbColor={regionEnabled ? "white" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={(newValue) => {
+                  regionEnabledShared.value = newValue;
+                  setRegionEnabled(newValue);
+                }}
+                value={regionEnabled}
+              />
+            </View>
+            <View style={styles.switchContainer}>
+              <Text style={{alignSelf: "center", color: "black"}}>Front</Text>
+              <Switch
+                style={{alignSelf: "center"}}
+                trackColor={{ false: "#767577", true: "black" }}
+                thumbColor={useFront ? "white" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={(newValue) => {
+                  useFrontShared.value=newValue;
+                  setUseFront(newValue);
+                }}
+                value={useFront}
+              />
+              <Text style={{alignSelf: "center", color: "black"}}>Torch</Text>
+              <Switch
+                style={{alignSelf: "center"}}
+                trackColor={{ false: "#767577", true: "black" }}
+                thumbColor={torchEnabled ? "white" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={(newValue) => {
+                  setTorchEnabled(newValue);
+                }}
+                value={torchEnabled}
+              />
+            </View>
+            
 
-        const { beacons } = this.state;
-        updatedBeacons.forEach((updatedBeacon) => {
-          const index = beacons.findIndex((beacon) =>
-            this._isIdenticalBeacon(updatedBeacon, beacon)
-          );
-          this.setState({
-            beacons: beacons.reduce<Array<typeof IBeaconAndroid>>(
-              (result, val, ind) => {
-                // replace current beacon values for updatedBeacon, keep current value for others
-                ind === index ? result.push(updatedBeacon) : result.push(val);
-                return result;
-              },
-              []
-            ),
-          });
-        });
-      }
-    );*/
-
-    // Region listeners
-    DeviceEventEmitter.addListener('regionDidEnter', ({ region }) => {
-      console.log('regionDidEnter', region);
-    });
-    DeviceEventEmitter.addListener('regionDidExit', ({ region }) => {
-      console.log('regionDidExit', region);
-    });
-
-    // Beacon monitoring listener
-    DeviceEventEmitter.addListener('monitoringCycle', ({ status }) => {
-      console.log('monitoringCycle', status);
-    });
-  }
-
-  componentWillUnmount() {
-    // Disconnect beaconManager and set to it to null
-    disconnect();
-    DeviceEventEmitter.removeAllListeners();
-  }
-
-  _startScanning = () => {
-    startScanning()
-      .then(() => this.setState({ scanning: true, statusText: null }))
-      .then(() => console.log('started scanning'))
-      .catch((error: any) => console.log('[startScanning]', error));
-  };
-  _stopScanning = () => {
-    stopScanning()
-      .then(() =>
-        this.setState({ scanning: false, beacons: [], statusText: null })
-      )
-      .then(() => console.log('stopped scanning'))
-      .catch((error: any) => console.log('[stopScanning]', error));
-  };
-  _restartScanning = () => {
-    restartScanning()
-      .then(() =>
-        this.setState({ scanning: true, beacons: [], statusText: null })
-      )
-      .then(() => console.log('restarted scanning'))
-      .catch((error: any) => console.log('[restartScanning]', error));
-  };
-  _isScanning = () => {
-    isScanning()
-      .then((result: any) => {
-        this.setState({
-          statusText: `Device is currently ${result ? '' : 'NOT '}scanning.`,
-        });
-        console.log('Is device scanning?', result);
-      })
-      .catch((error: any) => console.log('[isScanning]', error));
-  };
-  _isConnected = () => {
-    isConnected()
-      .then((result: any) => {
-        this.setState({
-          statusText: `Device is ${result ? '' : 'NOT '}ready to scan beacons.`,
-        });
-        console.log('Is device connected?', result);
-      })
-      .catch((error: any) => console.log('[isConnected]', error));
-  };
-  _getBeaconRegions = () => {
-    getBeaconRegions()
-      .then((regions: any) => console.log('regions', regions))
-      .catch((error: any) => console.log('[getBeaconRegions]', error));
-  };
-
-  /**
-   * Helper function used to identify equal beacons
-   */
-  _isIdenticalBeacon = (b1: typeof IBeaconAndroid, b2: typeof IBeaconAndroid) =>
-    b1.uniqueId === b2.uniqueId &&
-    b1.uuid === b2.uuid &&
-    b1.major === b2.major &&
-    b1.minor === b2.minor;
-
-  _renderBeacons = () => {
-    const colors = ['#F7C376', '#EFF7B7', '#F4CDED', '#A2C8F9', '#AAF7AF'];
-  };
-
-  _renderEmpty = () => {
-    const { scanning, beacons } = this.state;
-    let text;
-    if (!scanning) text = 'Start scanning to listen for beacon signals!';
-    if (scanning && !beacons.length) text = 'No beacons detected yet...';
-    return (
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{text}</Text>
-      </View>
-    );
-  };
-
-  _renderStatusText = () => {
-    const { statusText } = this.state;
-    return statusText ? (
-      <View style={styles.textContainer}>
-        <Text style={[styles.text, { color: 'red' }]}>{statusText}</Text>
-      </View>
-    ) : null;
-  };
-
-  _renderButton = (
-    text: string,
-    onPress: () => void,
-    backgroundColor: ColorValue
-  ) => (
-    <TouchableOpacity
-      style={[styles.button, { backgroundColor }]}
-      onPress={onPress}
-    >
-      <Text>{text}</Text>
-    </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={toggleCameraStatus} style={styles.toggleCameraStatusButton}>
+            <Text style={{fontSize: 15, color: "black", alignSelf: "center"}}>{buttonText}</Text>
+          </TouchableOpacity>
+          
+        </View>
+        
+      </SafeAreaView>
   );
-
-  render() {
-    const { scanning, beacons } = this.state;
-
-    return (
-      <View style={styles.container}>
-        <Button title="request permissions" onPress={requestLocationPermission} />
-        <View style={styles.buttonContainer}>
-          {this._renderButton('Start scan', this._startScanning, '#84e2f9')}
-          {this._renderButton('Stop scan', this._stopScanning, '#84e2f9')}
-          {this._renderButton('Restart scan', this._restartScanning, '#84e2f9')}
-        </View>
-        <View style={styles.buttonContainer}>
-          {this._renderButton('Is scanning?', this._isScanning, '#f2a2a2')}
-          {this._renderButton('Is connected?', this._isConnected, '#f2a2a2')}
-        </View>
-        <View style={styles.buttonContainer}>
-          {this._renderButton(
-            'Beacon regions (log)',
-            this._getBeaconRegions,
-            '#F4ED5A'
-          )}
-        </View>
-        {this._renderStatusText()}
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  beacon: {
-    justifyContent: 'space-around',
+    flex:1,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
   },
-  textContainer: {
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
+  barcodeText: {
+    fontSize: 20,
+    color: 'white',
     fontWeight: 'bold',
   },
-  buttonContainer: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+  toggleCameraStatusButton: {
+    flex: 0.2,
+    justifyContent: 'center',
+    borderColor:"black", 
+    borderWidth:2, 
+    borderRadius:5,
+    padding: 8,
+    margin: 5,
   },
-  button: {
-    padding: 10,
-    borderRadius: 10,
+  control:{
+    flexDirection:"row",
+    position: 'absolute',
+    bottom: 0,
+    height: "15%",
+    width:"100%",
+    alignSelf:"flex-start",
+    borderColor: "white",
+    borderWidth: 0.1,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    alignItems: 'center',
+  },
+  switchContainer: {
+    alignItems: 'flex-start',
+    flexDirection: "row",
   },
 });

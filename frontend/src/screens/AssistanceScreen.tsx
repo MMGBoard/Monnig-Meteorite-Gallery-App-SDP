@@ -20,7 +20,11 @@ import {
   ActivityIndicator,
   Searchbar,
   List,
-  Colors } from 'react-native-paper';
+  Colors, 
+  Divider as PaperDivider,
+  Text as PaperText,
+  Title
+   } from 'react-native-paper';
 
 import Kontakt from 'react-native-kontaktio';
 import type { ColorValue } from 'react-native';
@@ -32,6 +36,7 @@ import type {
 
 import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import TranslateText from '../components/TranslateText'
 import i18n from 'i18n-js' ;
 
 
@@ -81,6 +86,7 @@ type State = {
   isLoading: boolean;
   meteorites: Array<any>;
   qrCamera: boolean;
+  playStatus: string;
 };
 
 const requestLocationPermission = async () => {
@@ -162,7 +168,8 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     statusText: null,
     isLoading: true,
     meteorites: [],
-    qrCamera: false
+    qrCamera: false,
+    playStatus: 'Stop'
   };
 
   imagePath = require("../../images/mmgMap.png");
@@ -171,7 +178,19 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
   componentDidMount() {
     requestCameraPermission();
     requestLocationPermission();
-    
+    const data = this.props.route.params;
+    let displayName = "";
+    if(data != null){
+      displayName = data.barcodeText;
+    }
+
+    if(displayName != "") {
+      if(displayName === "region1") {
+        this.displayUpdate('Texas') 
+      } else if (displayName === "region2") {
+        this.displayUpdate('Mexico') 
+      }
+    }
     const subscriber = firestore()
     .collection('meteorites')
     .onSnapshot(querySnapshot => {
@@ -419,15 +438,24 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
   devices = useCameraDevices()
   device = this.devices.back
 */
+content = "Most meteorites come from asteroids, space rocks that orbit the Sun in a belt between Mars and Jupiter.About 4.5 billion years ago, the nine planets in our Solar System started to take shape from a cloud of gas and dust spinning around the Sun."
   render() {
+    const data = this.props.route.params;
+    let displayName = "";
+    if(data != null){
+      displayName = data.barcodeText;
+    }
     return (
       <View style={styles.mainContainer}>
+        <View style={styles.testButtons}>
+          <PaperButton icon="qrcode"  mode="contained" onPress={() => this.props.navigation.navigate('BleTest')}>
+            Use QR code scanner
+          </PaperButton>
+        </View>
         { !this.state.qrCamera &&
         <Image source={this.imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
         }
         <View style={styles.testButtons}>
-          <PaperButton mode="contained" onPress={() => null}>
-          Display 1</PaperButton>
           <PaperButton mode="contained" onPress={() => this.displayUpdate('Texas')}>
           Display 2</PaperButton>
           <PaperButton mode="contained" onPress={() => this.displayUpdate('Mexico')}>
@@ -468,18 +496,28 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
         )} />
       }
 
-      <View style={styles.buttonContainer}>
-          <PaperButton 
+      <PaperDivider/>
+        <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
+          <Card.Content>
+            <Title>
+              Asteroids
+             </Title>
+            <PaperText>
+                <TranslateText text={this.content} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
+          </Card.Content>
+          <Card.Actions>
+           <PaperButton style={{margin: 5}}
               icon="play-circle" mode="contained"
               //Make button change to pause-circle when pressed
-              //onPress={() => }
+              onPress={() => this.setState({playStatus: "Play"})}
               >Play</PaperButton>
-          <PaperButton 
+            <PaperButton 
               icon="stop-circle" mode="contained"
               //Make button change to pause when pressed
-              //onPress={() => ()}
+              onPress={() => this.setState({playStatus: "Stop"})}
               >Stop</PaperButton>
-      </View>   
+          </Card.Actions>
+        </Card>  
       </View>
     );
   }

@@ -80,6 +80,7 @@
               <Stack.Screen name="TabNavigator" component={TabNavigator} />
               <Stack.Screen name="DetailScreen" component={DetailScreen} />
               <Stack.Screen name="BleTest" component={BleTest} />
+              <Stack.Screen name="AssistanceScreen" component={AssistanceScreen} />
               <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
               </Stack.Navigator>
             </NavigationContainer>
