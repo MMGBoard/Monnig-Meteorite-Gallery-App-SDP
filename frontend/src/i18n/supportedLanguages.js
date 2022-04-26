@@ -10,6 +10,7 @@ const en = {
     english: 'English',
     spanish: 'Spanish',
     french: 'French',
+    vietnamese: 'Vietnamese',
     continue: 'Continue',
 
     // AcuityScreen.tsx
@@ -69,6 +70,7 @@ const es = {
     english: 'Inglés',
     spanish: 'Español',
     french: 'Francés',
+    vietnamese: 'Vietnamita',
     continue: 'Continuar',
 
     // AcuityScreen.tsx
@@ -128,6 +130,7 @@ const fr = {
     english: 'Anglais',
     spanish: 'Espagnol',
     french: 'français',
+    vietnamese: 'Vietnamien',
     continue: 'Continuez',
 
     // AcuityScreen.tsx
