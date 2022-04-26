@@ -128,6 +128,12 @@ export default function SettingsScreen({navigation} : {navigation: any}) {
                   i18n.locale = 'fr'
                   setValue('fr')
               }}/>
+          <RadioButton.Item labelStyle={{fontSize: 18, textAlign: 'center', fontFamily: 'ROBOTO'}}
+              value={value} color="#4D1979" label="French" status={ value === 'vi' ? 'checked' : 'unchecked'} onPress={() => 
+              {
+                  i18n.locale = 'vi'
+                  setValue('vi')
+              }}/>
 
 
           <PaperDivider/>

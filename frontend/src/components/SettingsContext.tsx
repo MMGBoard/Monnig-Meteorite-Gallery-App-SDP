@@ -24,6 +24,10 @@ const settingsContextWrapper = (component?: React.Component) => ({
         currentLanguageState.currentLang_ = 'fr'
         component?.setState({ context: settingsContextWrapper(component) });
     },
+    changeLangToVi: () => {
+      currentLanguageState.currentLang_ = 'vi'
+      component?.setState({ context: settingsContextWrapper(component) });
+    },
     changeFontSizeTo: (size:number) => {
         currentFontState.currentFontSize_ = size
         component?.setState({ context: settingsContextWrapper(component) });
