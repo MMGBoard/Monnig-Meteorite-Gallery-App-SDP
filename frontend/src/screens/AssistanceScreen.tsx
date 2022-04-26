@@ -91,6 +91,7 @@ type State = {
   modalVisible: boolean;
   map: any;
   currentRegion: string;
+  entrance: boolean;
 };
 
 const requestLocationPermission = async () => {
@@ -180,7 +181,8 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     playStatus: 'Stop',
     modalVisible: false,
     map: this.imagePathEntrance,
-    currentRegion: "Entrance"
+    currentRegion: "Entrance",
+    entrance: true,
   };
 
   
@@ -308,7 +310,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
       console.log("new region" + region.major);
       this.showModal()
       if(region.major = '3838') {
-        this.setState({map: this.imagePathTexas, currentRegion: "Texas Meteorites"})
+        this.setState({map: this.imagePathTexas, currentRegion: "Texas Meteorites", entrance: false})
         this.displayUpdate('Mexico')
       } else if (region.major = '2828') {
         this.setState({map: this.imagePathCollisions, currentRegion: "Collision Meteorites"})
@@ -470,66 +472,19 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
   contentAsteroid = "Most meteorites come from asteroids, space rocks that orbit the Sun in a belt between Mars and Jupiter.About 4.5 billion years ago, the nine planets in our Solar System started to take shape from a cloud of gas and dust spinning around the Sun."
   
   titleDyk = "Did You  Know...?"
-  contentDyk = "• Meteorites are the oldest rocks known usually 4.5 billion years old. • Meteorites that someone saw land are called falls. Those that no one saw land, but that were discovered later, are called finds. • Meteorites are named after the locality where they fell or were found. • Meteorites are not noticeably radioactive and are not hot when they land. • Meteorites may fall as single stones or as showers of thousands of stones. • Meteorites are studied by scientists called meteoriticists (not meteorologists). • Meteorites are often cut into slices or parts so that scientists can study the interior. "
+  contentDyk = "Meteorites are the oldest rocks known usually 4.5 billion years old. Meteorites that someone saw land are called falls. Those that no one saw land, but that were discovered later, are called finds. Meteorites are named after the locality where they fell or were found. Meteorites are not noticeably radioactive and are not hot when they land. Meteorites may fall as single stones or as showers of thousands of stones. Meteorites are studied by scientists called meteoriticists (not meteorologists). Meteorites are often cut into slices or parts so that scientists can study the interior. "
   
-  _renderInfoCard = () => {
-    const { statusText } = this.state;
-
-    if(this.state.currentRegion == "Entrance") {
-      return  (
-        <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
-        <Card.Content>
-          <Title>
-            Asteroids
-          </Title>
-          <PaperText>
-              <TranslateText text={this.contentAsteroid} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
-        </Card.Content>
-        <Card.Actions>
-        <PaperButton style={{margin: 5}}
-            icon="play-circle" mode="contained"
-            //Make button change to pause-circle when pressed
-            onPress={() => this.setState({playStatus: "Play"})}
-            >Play</PaperButton>
-          <PaperButton 
-            icon="stop-circle" mode="contained"
-            //Make button change to pause when pressed
-            onPress={() => this.setState({playStatus: "Stop"})}
-            >Stop</PaperButton>
-        </Card.Actions>
-      </Card>
-      )
-    } else if (this.state.currentRegion == "Texas Meteorites"){
-      <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
-      <Card.Content>
-        <Title>
-         Did You  Know...?
-        </Title>
-        <PaperText>
-            <TranslateText text={this.contentDyk} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
-      </Card.Content>
-      <Card.Actions>
-      <PaperButton style={{margin: 5}}
-          icon="play-circle" mode="contained"
-          //Make button change to pause-circle when pressed
-          onPress={() => this.setState({playStatus: "Play"})}
-          >Play</PaperButton>
-        <PaperButton 
-          icon="stop-circle" mode="contained"
-          //Make button change to pause when pressed
-          onPress={() => this.setState({playStatus: "Stop"})}
-          >Stop</PaperButton>
-      </Card.Actions>
-      </Card>
-    }
-  }
-
-
   render() {
     const data = this.props.route.params;
     let displayName = "";
     if(data != null){
       displayName = data.barcodeText;
+    }
+    let content = ""
+    if (this.state.entrance) {
+      content = this.contentAsteroid
+    } else {
+      content = this.contentDyk
     }
     this._startScanning()
     return (
@@ -592,7 +547,32 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
         )}/>
       }
       <PaperDivider/>
-       {this._renderInfoCard}
+        <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
+        <Card.Content>
+          {
+           this.state.entrance && 
+           <Title>Asteroids</Title>
+          } 
+          {
+           !this.state.entrance && 
+           <Title>Did You  Know...?</Title>
+          } 
+          <PaperText>
+              <TranslateText text={content} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
+        </Card.Content>
+        <Card.Actions>
+        <PaperButton style={{margin: 5}}
+            icon="play-circle" mode="contained"
+            //Make button change to pause-circle when pressed
+            onPress={() => this.setState({playStatus: "Play"})}
+            >Play</PaperButton>
+          <PaperButton 
+            icon="stop-circle" mode="contained"
+            //Make button change to pause when pressed
+            onPress={() => this.setState({playStatus: "Stop"})}
+            >Stop</PaperButton>
+        </Card.Actions>
+        </Card>
       </View>
     );
   }
