@@ -175,4 +175,64 @@ const fr = {
     resetSettings: 'Réinitialiser les options'
 };
 
-export { en, es, fr };
+const vi = {
+    // App.tsx
+    tourAssist: 'Hỗ trợ du lịch',
+    meteoriteCat: 'Danh mục thiên thạch',
+    settings: 'Cài đặt',
+
+    // LanguageSelectionScreen.tsx 
+    welcomeMonnig: "Chào mừng đến với Phòng trưng bày Thiên thạch Monnig của TCU!",
+    selectLang: 'Vui lòng chọn tùy chọn ngôn ngữ của bạn',
+    english: 'Tiếng Anh',
+    spanish: 'người Tây Ban Nha',
+    french: 'người Pháp',
+    vietnamese: 'Tiếng Việt',
+    continue: 'Còn nữa',
+
+    // AcuityScreen.tsx
+    back: 'Mặt sau',
+    selectFont: 'Vui lòng chọn kích thước phông chữ ưa thích của bạn:',
+    welcomeTCU: 'Chào mừng đến với TCU!',
+    next: 'Kế tiếp',
+
+    // ColorBlindnessScreen.tsx
+    selectTheme: 'Chọn chủ đề yêu thích của bạn bằng cách nhấn vào bên dưới:',
+    selectColors: 'Chọn màu bạn không thể nhìn thấy:',
+    red: 'Màu đỏ',
+    green: 'Màu xanh lá',
+    blue: 'Màu xanh da trời',
+    darkBlue: 'Xanh đậm',
+    selectBlind: 'Chọn loại mù màu của bạn',
+    startTour: 'Bắt đầu tour du lịch!',
+
+    // AssistanceScreen.tsx
+    // static data ...
+
+    // CatalogScreen.tsx
+    view: 'Lượt xem',
+    name: 'Tên',
+    catalogNo: 'Số danh mục',
+    category: 'Danh mục',
+    class: 'Lớp',
+    year: 'Năm',
+    group: 'GrTập đoànoup',
+    location: 'Địa điểm',
+    search: 'Tìm kiếm',
+
+    // DetailScreen.tsx
+    play: 'Chơi',
+    stop: 'Ngừng lại',
+
+    // Settings.tsx
+    darkMode: 'Chế độ tối: ',
+    langPref: 'Tùy chọn Ngôn ngữ: ',
+    brightness: 'độ sáng: ',
+    fontSize: 'Cỡ chữ: ',
+    colorbType: 'Loại mù màu:',
+    visualimpType: 'Loại suy giảm thị giác:',
+    selectOption: 'Chọn một tùy chọn',
+    resetSettings: 'Đặt lại cài đặt'
+};
+
+export { en, es, fr, vi };

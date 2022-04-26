@@ -6,10 +6,10 @@ import Config from "react-native-config";
 // User Defined components
 import { SettingsContext } from '../components/SettingsContext' ;
 import i18n from 'i18n-js' ;
-import { en, es, fr } from '../i18n/supportedLanguages' ;
+import { en, es, fr, vi } from '../i18n/supportedLanguages' ;
 
 i18n.fallbacks = true ;
-i18n.translations = { en, es, fr } ;
+i18n.translations = { en, es, fr, vi } ;
 i18n.locale = 'en' ;
 
 /**
@@ -67,6 +67,12 @@ export function handleFrChange(checked:any,setChecked:any){
     return (setChecked(checked))
 }
 
+export function handleViChange(checked:any,setChecked:any){
+    const { changeLangToVi } = React.useContext(SettingsContext);
+    changeLangToVi
+    return (setChecked(checked))
+}
+
 /**
  * Displays Language Selection screen to record user's language preference.
  * @param navigation Used for directing to different screen.
@@ -107,6 +113,13 @@ export default function LanguageSelectionScreen(this: any, {navigation} : {navig
                             //changeLangToFr()
                             i18n.locale = 'fr'
                             setChecked('fr')
+                        }}/>
+                    <RadioButton.Item labelStyle={{fontSize: 32, fontFamily: 'ROBOTO', width: "50%"}}
+                        value="vi" color="#4D1979" label={i18n.t('vietnamese')} status={ _checked === 'vi' ? 'checked' : 'unchecked'} onPress={() => 
+                        {
+                            //changeLangToFr()
+                            i18n.locale = 'vi'
+                            setChecked('vi')
                         }}/>
                 </View>
             <View style={styles.continueButton}>
