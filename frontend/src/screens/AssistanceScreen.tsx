@@ -10,7 +10,8 @@ import {
   Button,
   Image,
   FlatList,
-  Alert
+  Modal,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
@@ -24,9 +25,7 @@ import {
   Colors, 
   Divider as PaperDivider,
   Text as PaperText,
-  Title,
-  Modal
-   } from 'react-native-paper';
+  Title} from 'react-native-paper';
 
 import Kontakt from 'react-native-kontaktio';
 import type { ColorValue } from 'react-native';
@@ -91,6 +90,7 @@ type State = {
   playStatus: string;
   modalVisible: boolean;
   map: any;
+  currentRegion: string;
 };
 
 const requestLocationPermission = async () => {
@@ -164,8 +164,8 @@ interface Props {
  * to your mobile phone.
  */
 export default class AssistanceScreen extends Component<Props,{}, State> {
-  imagePathEntrance = require("../../images/entrance.png");
-  imagePathTexas= require("../../images/texasMeteorites.png");
+  imagePathEntrance = require("../../images/asteroids.png");
+  imagePathTexas= require("../../images/texas.png");
   imagePathImpacts = require("../../images/impacts.png");
   imagePathCollisions = require("../../images/collisions.png");
 
@@ -180,6 +180,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     playStatus: 'Stop',
     modalVisible: false,
     map: this.imagePathEntrance,
+    currentRegion: "Entrance"
   };
 
   
@@ -305,11 +306,12 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     // Region listeners
     DeviceEventEmitter.addListener('regionDidEnter', ({ region }) => {
       console.log("new region" + region.major);
+      this.showModal()
       if(region.major = '3838') {
-        this.setState({map: this.imagePathTexas})
-        this.displayUpdate('Entrance')
+        this.setState({map: this.imagePathTexas, currentRegion: "Texas Meteorites"})
+        this.displayUpdate('Mexico')
       } else if (region.major = '2828') {
-        this.setState({map: this.imagePathCollisions})
+        this.setState({map: this.imagePathCollisions, currentRegion: "Collision Meteorites"})
         this.displayUpdate('Mexico')
       }
       console.log('regionDidEnter', region);
@@ -446,33 +448,113 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
       this.setState({meteorites: meteors, isLoading: false});
   });
   }
-/*
-  changeMode = () => {
-    this.setState({qrCamera: true});
-  }
-  devices = useCameraDevices()
-  device = this.devices.back
-*/
 
-content = "Most meteorites come from asteroids, space rocks that orbit the Sun in a belt between Mars and Jupiter.About 4.5 billion years ago, the nine planets in our Solar System started to take shape from a cloud of gas and dust spinning around the Sun."
+  showModal = () => {
+    this.setState({
+      modalVisible: true,
+    });
+    setTimeout(() => {
+      this.setState({
+        modalVisible: false,
+      });
+    }, 4000);
+  };
+
+  hideModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  }
+
+  titleAsteroid = "Asteroids"
+  contentAsteroid = "Most meteorites come from asteroids, space rocks that orbit the Sun in a belt between Mars and Jupiter.About 4.5 billion years ago, the nine planets in our Solar System started to take shape from a cloud of gas and dust spinning around the Sun."
+  
+  titleDyk = "Did You  Know...?"
+  contentDyk = "• Meteorites are the oldest rocks known usually 4.5 billion years old. • Meteorites that someone saw land are called falls. Those that no one saw land, but that were discovered later, are called finds. • Meteorites are named after the locality where they fell or were found. • Meteorites are not noticeably radioactive and are not hot when they land. • Meteorites may fall as single stones or as showers of thousands of stones. • Meteorites are studied by scientists called meteoriticists (not meteorologists). • Meteorites are often cut into slices or parts so that scientists can study the interior. "
+  
+  _renderInfoCard = () => {
+    const { statusText } = this.state;
+
+    if(this.state.currentRegion == "Entrance") {
+      return  (
+        <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
+        <Card.Content>
+          <Title>
+            Asteroids
+          </Title>
+          <PaperText>
+              <TranslateText text={this.contentAsteroid} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
+        </Card.Content>
+        <Card.Actions>
+        <PaperButton style={{margin: 5}}
+            icon="play-circle" mode="contained"
+            //Make button change to pause-circle when pressed
+            onPress={() => this.setState({playStatus: "Play"})}
+            >Play</PaperButton>
+          <PaperButton 
+            icon="stop-circle" mode="contained"
+            //Make button change to pause when pressed
+            onPress={() => this.setState({playStatus: "Stop"})}
+            >Stop</PaperButton>
+        </Card.Actions>
+      </Card>
+      )
+    } else if (this.state.currentRegion == "Texas Meteorites"){
+      <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
+      <Card.Content>
+        <Title>
+         Did You  Know...?
+        </Title>
+        <PaperText>
+            <TranslateText text={this.contentDyk} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
+      </Card.Content>
+      <Card.Actions>
+      <PaperButton style={{margin: 5}}
+          icon="play-circle" mode="contained"
+          //Make button change to pause-circle when pressed
+          onPress={() => this.setState({playStatus: "Play"})}
+          >Play</PaperButton>
+        <PaperButton 
+          icon="stop-circle" mode="contained"
+          //Make button change to pause when pressed
+          onPress={() => this.setState({playStatus: "Stop"})}
+          >Stop</PaperButton>
+      </Card.Actions>
+      </Card>
+    }
+  }
+
+
   render() {
     const data = this.props.route.params;
     let displayName = "";
     if(data != null){
       displayName = data.barcodeText;
     }
+    this._startScanning()
     return (
       <View style={styles.mainContainer}>
+        <Modal visible={this.state.modalVisible} transparent={true}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>You are entering the {this.state.currentRegion} room.</Text>
+          </View>
+        </View>
+        </Modal>
         <View style={styles.testButtons}>
           <PaperButton icon="qrcode"  mode="contained" onPress={() => this.props.navigation.navigate('BleTest')}>
-            Use QR code scanner
+            QR code scanner
           </PaperButton>
         </View>
+
+
         <Image source={this.state.map} resizeMode="cover" style={{width: "101%", height: "42%"}} />
+        <Text style={styles.nearYou}>Meteorites near you: </Text>
+        {/** 
         <View style={styles.testButtons}>
           <PaperButton mode="contained" onPress={() => this.displayUpdate('Texas')}>
           Display 2</PaperButton>
-          <PaperButton mode="contained" onPress={() => this.displayUpdate('Mexico')}>
+          <PaperButton mode="contained" onPress={() => this.showModal()}>
           Display 3</PaperButton>
           <PaperButton mode="contained" onPress={() => this.displayUpdate('test4')}>
           Display 4</PaperButton>
@@ -482,8 +564,8 @@ content = "Most meteorites come from asteroids, space rocks that orbit the Sun i
           {this._renderButton('Start scan', this._startScanning, '#84e2f9')}
           {this._renderButton('Stop scan', this._stopScanning, '#84e2f9')}
           {this._renderButton('Restart scan', this._restartScanning, '#84e2f9')}
-        </View>
-
+        </View> 
+*/}
       { this.state.isLoading &&
         <View style={styles.activityLoaderContainer}>
           <ActivityIndicator size="large"/>
@@ -507,30 +589,10 @@ content = "Most meteorites come from asteroids, space rocks that orbit the Sun i
               </Card.Actions>
             </Card>
           </View>
-        )} />
+        )}/>
       }
       <PaperDivider/>
-        <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
-          <Card.Content>
-            <Title>
-              Asteroids
-             </Title>
-            <PaperText>
-                <TranslateText text={this.content} lang={i18n.locale} status={this.state.playStatus}/></PaperText>
-          </Card.Content>
-          <Card.Actions>
-           <PaperButton style={{margin: 5}}
-              icon="play-circle" mode="contained"
-              //Make button change to pause-circle when pressed
-              onPress={() => this.setState({playStatus: "Play"})}
-              >Play</PaperButton>
-            <PaperButton 
-              icon="stop-circle" mode="contained"
-              //Make button change to pause when pressed
-              onPress={() => this.setState({playStatus: "Stop"})}
-              >Stop</PaperButton>
-          </Card.Actions>
-        </Card>  
+       {this._renderInfoCard}
       </View>
     );
   }
@@ -563,6 +625,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20
+  },
   beacon: {
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -585,6 +651,39 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  centeredView: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  nearYou: {
+    fontSize: 26,
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom:10,
+
+},
 });
 
 //export default withNavigation(AssistanceScreen);
