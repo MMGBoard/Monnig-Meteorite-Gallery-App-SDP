@@ -9,7 +9,8 @@ import {
   PermissionsAndroid,
   Button,
   Image,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
@@ -23,7 +24,8 @@ import {
   Colors, 
   Divider as PaperDivider,
   Text as PaperText,
-  Title
+  Title,
+  Modal
    } from 'react-native-paper';
 
 import Kontakt from 'react-native-kontaktio';
@@ -34,7 +36,7 @@ import type {
   IBeaconAndroid,
 } from 'react-native-kontaktio';
 
-import { NavigationInjectedProps, withNavigation } from 'react-navigation';
+import { AnimatedValue, NavigationInjectedProps, withNavigation } from 'react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TranslateText from '../components/TranslateText'
 import i18n from 'i18n-js' ;
@@ -87,6 +89,8 @@ type State = {
   meteorites: Array<any>;
   qrCamera: boolean;
   playStatus: string;
+  modalVisible: boolean;
+  map: any;
 };
 
 const requestLocationPermission = async () => {
@@ -160,7 +164,11 @@ interface Props {
  * to your mobile phone.
  */
 export default class AssistanceScreen extends Component<Props,{}, State> {
-  
+  imagePathEntrance = require("../../images/entrance.png");
+  imagePathTexas= require("../../images/texasMeteorites.png");
+  imagePathImpacts = require("../../images/impacts.png");
+  imagePathCollisions = require("../../images/collisions.png");
+
   state: State = {
     scanning: false,
     beacons: [],
@@ -169,10 +177,12 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     isLoading: true,
     meteorites: [],
     qrCamera: false,
-    playStatus: 'Stop'
+    playStatus: 'Stop',
+    modalVisible: false,
+    map: this.imagePathEntrance,
   };
 
-  imagePath = require("../../images/mmgMap.png");
+  
   detailsStack = createNativeStackNavigator();
 
   componentDidMount() {
@@ -186,9 +196,11 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
 
     if(displayName != "") {
       if(displayName === "region1") {
-        this.displayUpdate('Texas') 
+        this.displayUpdate('Texas')
+        this.setState({map: this.imagePathTexas})
       } else if (displayName === "region2") {
-        this.displayUpdate('Mexico') 
+        this.displayUpdate('Mexico')
+        this.setState({map: this.imagePathCollisions}) 
       }
     }
     const subscriber = firestore()
@@ -294,8 +306,10 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
     DeviceEventEmitter.addListener('regionDidEnter', ({ region }) => {
       console.log("new region" + region.major);
       if(region.major = '3838') {
+        this.setState({map: this.imagePathTexas})
         this.displayUpdate('Entrance')
       } else if (region.major = '2828') {
+        this.setState({map: this.imagePathCollisions})
         this.displayUpdate('Mexico')
       }
       console.log('regionDidEnter', region);
@@ -414,6 +428,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
   );
 
   displayUpdate = (displayName: string) => {
+    console.log("Map state: ", this.state.map)
     this.setState({isLoading: true});
     firestore()
     .collection('meteorites')
@@ -438,6 +453,7 @@ export default class AssistanceScreen extends Component<Props,{}, State> {
   devices = useCameraDevices()
   device = this.devices.back
 */
+
 content = "Most meteorites come from asteroids, space rocks that orbit the Sun in a belt between Mars and Jupiter.About 4.5 billion years ago, the nine planets in our Solar System started to take shape from a cloud of gas and dust spinning around the Sun."
   render() {
     const data = this.props.route.params;
@@ -452,9 +468,7 @@ content = "Most meteorites come from asteroids, space rocks that orbit the Sun i
             Use QR code scanner
           </PaperButton>
         </View>
-        { !this.state.qrCamera &&
-        <Image source={this.imagePath} resizeMode="cover" style={{width: "101%", height: "42%"}} />
-        }
+        <Image source={this.state.map} resizeMode="cover" style={{width: "101%", height: "42%"}} />
         <View style={styles.testButtons}>
           <PaperButton mode="contained" onPress={() => this.displayUpdate('Texas')}>
           Display 2</PaperButton>
@@ -495,7 +509,6 @@ content = "Most meteorites come from asteroids, space rocks that orbit the Sun i
           </View>
         )} />
       }
-
       <PaperDivider/>
         <Card style={{marginLeft: 10, marginRight: 10, marginTop:5}}>
           <Card.Content>
